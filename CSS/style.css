@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+
+body {
+    margin: 0;
+    font-family: 'Anton', sans-serif;
+}
+
+.nav {
+    background-color: #cde3dc;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.nav-item ul {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+
+}
+
+.nav-item ul li {
+    list-style: none;
+}
+
+.categoria {
+    padding-left: 2rem;
+    background-image: url("/IMAGEN/flecha.png");
+    background-position: 0 50%;
+    background-size: 1.3rem 1.3rem;
+    background-repeat: no-repeat;
+    list-style: none;
+}
+
+
+.button1 {
+    display: none;
+}
