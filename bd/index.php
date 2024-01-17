@@ -48,13 +48,13 @@
             $productos = obtenerProductosDesdeBaseDeDatos();
 
             for ($i = 0; $i < count($productos); $i++)
-                foreach ($productos[$i] as $productos) {
+                foreach ($productos[$i] as $producto) {
                     echo '<div class="productos">';
-                    echo '<img class="w-50" alt=""  src="' . $productos['url'] . '">';
-                    echo '<h3>' . $productos['nombre'] . '</h3>';
-                    echo '<p>Precio: $' . $productos['precio'] . '</p>';
+                    echo '<img class="w-50" alt=""  src="' . $producto['url'] . '">';
+                    echo '<h3>' . $producto['nombre'] . '</h3>';
+                    echo '<p>Precio: $' . $producto['precio'] . '</p>';
                     echo '<form action="carrito.php" method="post">';
-                    echo '<input type="hidden" name="GUID" value="' . $productos['GUID'] . '">';
+                    echo '<input type="hidden" name="GUID" value="' . $producto['GUID'] . '">';
                     echo '<button type="submit">Agregar al carrito</button>';
                     echo '</form>';
                     echo '</div>';
