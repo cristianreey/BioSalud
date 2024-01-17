@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Farmacia TuSalud</title>
-    <link rel="stylesheet" href="" />
+    <link rel="stylesheet" href="CSS/style.css" />
     <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
 </head>
@@ -14,7 +14,7 @@
     <header>
         <section class="section1">
             <div class="logo">
-                <img src="/IMAGEN/HatchfulExport-All/logo_transparent.png" alt="Logo de Farmacia TuSalud" />
+                <img src="IMAGEN/HatchfulExport-All/logo_transparent.png" alt="Logo de Farmacia TuSalud" />
             </div>
             <div class="barra-busqueda">
                 <input type="text" placeholder="Buscar productos..." />
@@ -37,27 +37,31 @@
             <a href="#">MASCOTAS</a>
         </section>
     </header>
-</body>
-<!-- Lista de productos -->
-<h2>Productos Disponibles</h2>
-<?php
-include('funciones.php');
+    <main class="contenedor">
+        <!-- Lista de productos -->
+        <h2>Productos Disponibles</h2>
+        <div class="contenedorProductos">
+            <?php
+            include('funciones.php');
 
-// Aquí deberías recuperar y mostrar la lista de productos desde tu base de datos
-$productos = obtenerProductosDesdeBaseDeDatos();
+            // Aquí deberías recuperar y mostrar la lista de productos desde tu base de datos
+            $productos = obtenerProductosDesdeBaseDeDatos();
 
-for ($i = 0; $i < count($productos); $i++)
-    foreach ($productos[$i] as $productos) {
-        echo '<div>';
-        echo '<h3>' . $productos['nombre'] . '</h3>';
-        echo '<p>Precio: $' . $productos['precio'] . '</p>';
-        echo '<form action="carrito.php" method="post">';
-        echo '<input type="hidden" name="producto_id" value="' . $productos['id'] . '">';
-        echo '<button type="submit">Agregar al carrito</button>';
-        echo '</form>';
-        echo '</div>';
-    }
-?>
+            for ($i = 0; $i < count($productos); $i++)
+                foreach ($productos[$i] as $productos) {
+                    echo '<div class="productos">';
+                    echo '<img class="w-50" alt=""  src="' . $productos['url'] . '">';
+                    echo '<h3>' . $productos['nombre'] . '</h3>';
+                    echo '<p>Precio: $' . $productos['precio'] . '</p>';
+                    echo '<form action="carrito.php" method="post">';
+                    echo '<input type="hidden" name="GUID" value="' . $productos['GUID'] . '">';
+                    echo '<button type="submit">Agregar al carrito</button>';
+                    echo '</form>';
+                    echo '</div>';
+                }
+            ?>
+        </div>
+    </main>
 </body>
 
 </html>

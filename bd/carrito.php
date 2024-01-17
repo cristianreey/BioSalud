@@ -5,10 +5,10 @@ include('funciones.php');
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $producto_id = $_POST['producto_id'];
+    $GUID = $_POST['GUID'];
 
     // Agregar el producto al carrito en la sesión
-    $_SESSION['carrito'][] = obtenerProductoDesdeBaseDeDatosPorId($producto_id);
+    $_SESSION['carrito'][] = obtenerProductoDesdeBaseDeDatosPorId($GUID);
 }
 ?>
 
@@ -27,10 +27,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php
     // Mostrar los productos en el carrito
     if (!empty($_SESSION['carrito'])) {
-        foreach ($_SESSION['carrito'] as $producto) {
+
+
+        $productos = $_SESSION['carrito'];
+        for ($i = 0; $i < count($productos); $i++) {
+            var_dump($productos[$i]);
+            echo '<img class="w-50" alt=""  src="' . $productos[$i]['url'] . '">';
             echo '<div>';
-            echo '<h3>' . $producto['nombre'] . '</h3>';
-            echo '<p>Precio: $' . $producto['precio'] . '</p>';
+            echo '<h3>' . $productos[$i]['nombre'] . '</h3>';
+            echo '<p>Precio: $' . $productos[$i]['precio'] . '</p>';
             echo '</div>';
         }
     } else {

@@ -1,7 +1,7 @@
 <?php 
 $usuario="root";
 $password="";
-$dbname="farmacia";
+$dbname="biosalud";
 $host="localhost";
 
 ?>

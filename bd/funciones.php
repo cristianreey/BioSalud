@@ -25,20 +25,21 @@ function obtenerProductosDesdeBaseDeDatos()
             $productos[] = $row;
         }
 
+
         return $productos;
 
     } catch (Exception $e) {
         echo $e;
     }
 }
-function obtenerProductoDesdeBaseDeDatosPorId($producto_id)
+function obtenerProductoDesdeBaseDeDatosPorId($GUID)
 {
     $pdo = Farmacia::conectar("host", "dbname", "usuario", "password");
 
     try {
-        $query = "SELECT * FROM productos WHERE id = :producto_id";
+        $query = "SELECT * FROM productos WHERE GUID = :GUID";
         $stmt = $pdo->prepare($query);
-        $stmt->bindParam(':producto_id', $producto_id, PDO::PARAM_INT);
+        $stmt->bindParam(':GUID', $GUID, PDO::PARAM_INT);
         $stmt->execute();
 
         $producto = $stmt->fetch(PDO::FETCH_ASSOC);
