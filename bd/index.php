@@ -25,17 +25,27 @@
             </div>
         </section>
         <section class="section2">
-            <a href="#">BEBÉ Y MAMÁ</a>
-            <a href="#">HINGIENE BUCAL</a>
-            <a href="#">SALUD SEXUAL</a>
-            <a href="#">DERMOCOSMÉTICA</a>
-            <a href="#">ALIMENTACIÓN</a>
-            <a href="#">MEDICINA NATURAL</a>
-            <a href="#">ÓPTICA</a>
-            <a href="#">BOTIQUÍN</a>
-            <a href="#">ORTOPEDIA</a>
-            <a href="#">MASCOTAS</a>
+            <?php
+            $categorias = array(
+                1 => "BEBÉ Y MAMÁ",
+                2 => "HINGIENE BUCAL",
+                3 => "SALUD SEXUAL",
+                4 => "DERMOCOSMÉTICA"
+            );
+
+            // Asegurar que $idCategoriaSeleccionada esté definida antes de usarla
+            $idCategoriaSeleccionada = isset($_GET['categoria']) ? $_GET['categoria'] : 1;
+
+            foreach ($categorias as $id => $nombreCategoria) {
+                $enlace = "index.php?categoria=$id";
+                $clase = ($id == $idCategoriaSeleccionada) ? 'categoria-actual' : '';
+
+                echo "<a href=\"$enlace\" class=\"$clase\"><span>$nombreCategoria</span></a>";
+            }
+            ?>
         </section>
+
+
     </header>
     <main class="contenedor">
         <!-- Lista de productos -->
@@ -45,11 +55,14 @@
             <?php
             include('funciones.php');
 
-            // Aquí deberías recuperar y mostrar la lista de productos desde tu base de datos
-            $productos = obtenerProductosDesdeBaseDeDatos();
+            // Recuperar la categoría seleccionada (puedes obtenerla de la URL, por ejemplo)
+            $idCategoriaSeleccionada = isset($_GET['categoria']) ? $_GET['categoria'] : 1;
 
-            for ($i = 0; $i < count($productos); $i++)
-                foreach ($productos[$i] as $producto) {
+            // Aquí deberías recuperar y mostrar la lista de productos desde tu base de datos
+            $productos = obtenerProductosPorCategoria($idCategoriaSeleccionada);
+
+            if ($productos !== null) {
+                foreach ($productos as $producto) {
                     echo '<div class="productos">';
                     echo '<img class="w-50" alt=""  src="' . $producto['url'] . '">';
                     echo '<h3>' . $producto['nombre'] . '</h3>';
@@ -60,6 +73,9 @@
                     echo '</form>';
                     echo '</div>';
                 }
+            } else {
+                echo 'No se encontraron productos para la categoría seleccionada.';
+            }
             ?>
         </div>
     </main>

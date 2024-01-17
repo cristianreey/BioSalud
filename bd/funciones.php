@@ -51,4 +51,31 @@ function obtenerProductoDesdeBaseDeDatosPorId($GUID)
     }
 }
 
+function obtenerProductosPorCategoria($idCategoria)
+{
+    $pdo = Farmacia::conectar("host", "dbname", "usuario", "password");
+
+    try {
+        $query = "SELECT p.*
+                  FROM productos p
+                  WHERE p.idCategoria = :idCategoria";
+
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(':idCategoria', $idCategoria, PDO::PARAM_INT);
+        $stmt->execute();
+
+        // Verificar si se encontraron productos
+        if ($stmt->rowCount() > 0) {
+            $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $productos;
+        } else {
+            return array();  // Devolver un array vacío si no hay productos
+        }
+    } catch (PDOException $e) {
+        print "¡Error!: " . $e->getMessage() . "<br/>";
+        return null;
+    }
+}
+
+
 obtenerProductosDesdeBaseDeDatos();
