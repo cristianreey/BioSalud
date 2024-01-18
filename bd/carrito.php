@@ -13,11 +13,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Eliminar producto del carrito
 if (isset($_GET['action']) && $_GET['action'] == 'eliminar_producto' && isset($_GET['index'])) {
     $index = $_GET['index'];
-    if (isset($_SESSION['carrito'][$index])) {
+
+    // Verificar si el índice existe y no está vacío en el array
+    if (isset($_SESSION['carrito'][$index]) && $_SESSION['carrito'][$index] !== null) {
         unset($_SESSION['carrito'][$index]);
+
+        // Reindexar el array después de la eliminación
+        $_SESSION['carrito'] = array_values($_SESSION['carrito']);
     }
     // Puedes realizar redirección o mostrar un mensaje de éxito aquí
 }
+
+
 
 // Vaciar el carrito
 if (isset($_GET['action']) && $_GET['action'] == 'vaciar_carrito') {
@@ -60,16 +67,24 @@ if (isset($_GET['action']) && $_GET['action'] == 'actualizar_carrito') {
             </div>
         </section>
         <section class="section2">
-            <a href="#">BEBÉ Y MAMÁ</a>
-            <a href="#">HINGIENE BUCAL</a>
-            <a href="#">SALUD SEXUAL</a>
-            <a href="#">DERMOCOSMÉTICA</a>
-            <a href="#">ALIMENTACIÓN</a>
-            <a href="#">MEDICINA NATURAL</a>
-            <a href="#">ÓPTICA</a>
-            <a href="#">BOTIQUÍN</a>
-            <a href="#">ORTOPEDIA</a>
-            <a href="#">MASCOTAS</a>
+            <?php
+            $categorias = array(
+                1 => "BEBÉ Y MAMÁ",
+                2 => "HINGIENE BUCAL",
+                3 => "SALUD SEXUAL",
+                4 => "DERMOCOSMÉTICA"
+            );
+
+            // Asegurar que $idCategoriaSeleccionada esté definida antes de usarla
+            $idCategoriaSeleccionada = isset($_GET['categoria']) ? $_GET['categoria'] : 1;
+
+            foreach ($categorias as $id => $nombreCategoria) {
+                $enlace = "index.php?categoria=$id";
+                $clase = ($id == $idCategoriaSeleccionada) ? 'categoria-actual' : '';
+
+                echo "<a href=\"$enlace\" class=\"$clase\"><span>$nombreCategoria</span></a>";
+            }
+            ?>
         </section>
     </header>
 
