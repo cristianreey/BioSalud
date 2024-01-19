@@ -7,7 +7,15 @@
     <title>Farmacia TuSalud</title>
     <link rel="stylesheet" href="CSS/style.css" />
     <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.7.0/dist/css/bootstrap.min.css"
+        integrity="sha384-GLhlTQ8iNl+8XzPWl4049PmM4l9smB/JBXq59fnfDA5IboELdNEISCr/VQFnJf1c" crossorigin="anonymous">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.7.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ea8cHA2QqjRkK6T0EKht3O3TxI5l9bq3HFZe1l6I5p1cPMJToF1tgfVkR2E0C4L3"
+        crossorigin="anonymous"></script>
+
 </head>
 
 <body>
@@ -21,12 +29,13 @@
             </div>
             <div class="usuario">
                 <a href="#"><span class="material-icons">account_circle</span></a>
-                <a href="carrito.php"><span class="material-icons">shopping_bag</span></a>
+                <a href="carrito.html"><span class="material-icons">shopping_bag</span></a>
             </div>
         </section>
         <section class="section2">
             <?php
             $categorias = array(
+                0 => "INICIO",
                 1 => "BEBÉ Y MAMÁ",
                 2 => "HINGIENE BUCAL",
                 3 => "SALUD SEXUAL",
@@ -44,19 +53,15 @@
             }
             ?>
         </section>
-
-
     </header>
     <main class="contenedor">
-        <!-- Lista de productos -->
-        <h2>PRODUCTOS DISPONIBLES</h2>
-        <hr>
-        <div class="contenedorProductos">
-            <?php
+        <?php
+        // Verifica si se ha seleccionado una categoría antes de mostrar los productos
+        if ($idCategoriaSeleccionada != 0) { // Puedes ajustar el valor según tus necesidades
+            echo '<h2>PRODUCTOS DISPONIBLES</h2>';
+            echo '<hr>';
+            echo '<div class="contenedorProductos">';
             include('funciones.php');
-
-            // Recuperar la categoría seleccionada (puedes obtenerla de la URL, por ejemplo)
-            $idCategoriaSeleccionada = isset($_GET['categoria']) ? $_GET['categoria'] : 1;
 
             // Aquí deberías recuperar y mostrar la lista de productos desde tu base de datos
             $productos = obtenerProductosPorCategoria($idCategoriaSeleccionada);
@@ -66,7 +71,7 @@
                     echo '<div class="productos">';
                     echo '<img class="w-50" alt=""  src="' . $producto['url'] . '">';
                     echo '<h3>' . $producto['nombre'] . '</h3>';
-                    echo '<p>Precio: $' . $producto['precio'] . '</p>';
+                    echo '<p>Precio: ' . $producto['precio'] . '€</p>';
                     echo '<form action="carrito.php" method="post">';
                     echo '<input type="hidden" name="GUID" value="' . $producto['GUID'] . '">';
                     echo '<button type="submit">Agregar al carrito</button>';
@@ -76,7 +81,49 @@
             } else {
                 echo 'No se encontraron productos para la categoría seleccionada.';
             }
-            ?>
+
+            echo '</div>';
+        }
+        if ($idCategoriaSeleccionada == 0) {
+            echo '<div class="contenedor-carrusel">';
+            echo '<div class="container d-flex align-items-center justify-content-center h-100">';
+            echo '<div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">';
+            echo '<div class="carousel-inner">';
+            echo '<div class="carousel-item active">';
+            echo '<img src="IMAGEN/bienvenido.png" class=" h-100" alt="...">';
+            echo '</div>';
+            echo '<div class="carousel-item">';
+            echo '<img src="IMAGEN/des.png..." class=" h-100" alt="...">';
+            echo '</div>';
+            echo '</div>';
+            echo '</div>';
+            echo '</div>';
+            echo '</div>';
+
+            echo '<h2>PRODUCTOS DESTACADOS</h2>';
+            echo '<div class="productos-destacados">';
+            echo '<div class="productos">';
+            echo '<img class="w-50" alt=""  src="IMAGEN/aderma.jpg">';
+            echo '<h3>Aderma Gel de Ducha, 500ml</h3>';
+            echo '<p>Precio: 5€</p>';
+            echo '</div>';
+
+            echo '<div class="productos">';
+            echo '<img class="w-50" alt=""  src="IMAGEN/atria.webp">';
+            echo '<h3>Atria Crema de Noche Antiedad</h3>';
+            echo '<p>Precio: 22€</p>';
+            echo '</div>';
+
+            echo '<div class="productos">';
+            echo '<img class="w-50" alt=""  src="IMAGEN/novalac.webp">';
+            echo '<h3>Novalac 2 Premium</h3>';
+            echo '<p>Precio: 16€</p>';
+            echo '</div>';
+            echo '</div>';
+
+        }
+
+        ?>
         </div>
     </main>
     <footer>
@@ -164,7 +211,12 @@
                     new google.translate.TranslateElement({ pageLanguage: 'es', includedLanguages: 'ca,eu,gl,en,fr,it,pt,de', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, gaTrack: true }, 'google_translate_element');
                 }
             </script>
-
+            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+                integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+                crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+                integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+                crossorigin="anonymous"></script>
             <script type="text/javascript"
                 src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
         </div>

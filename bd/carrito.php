@@ -69,6 +69,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'actualizar_carrito') {
         <section class="section2">
             <?php
             $categorias = array(
+                0 => "INICIO",
                 1 => "BEBÉ Y MAMÁ",
                 2 => "HINGIENE BUCAL",
                 3 => "SALUD SEXUAL",
@@ -101,7 +102,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'actualizar_carrito') {
                 echo '<img class="w-25" alt=""  src="' . $productos[$i]['url'] . '">';
                 echo '<div>';
                 echo '<h3>' . $productos[$i]['nombre'] . '</h3>';
-                echo '<p>Precio: $' . $productos[$i]['precio'] . '</p>';
+                echo '<p>Precio: ' . $productos[$i]['precio'] . '€</p>';
                 echo '</div>';
 
                 // Botón de eliminar producto
