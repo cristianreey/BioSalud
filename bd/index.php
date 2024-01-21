@@ -43,7 +43,7 @@
             );
 
             // Asegurar que $idCategoriaSeleccionada esté definida antes de usarla
-            $idCategoriaSeleccionada = isset($_GET['categoria']) ? $_GET['categoria'] : 1;
+            $idCategoriaSeleccionada = isset($_GET['categoria']) ? $_GET['categoria'] : 0;
 
             foreach ($categorias as $id => $nombreCategoria) {
                 $enlace = "index.php?categoria=$id";
@@ -57,13 +57,12 @@
     <main class="contenedor">
         <?php
         // Verifica si se ha seleccionado una categoría antes de mostrar los productos
-        if ($idCategoriaSeleccionada != 0) { // Puedes ajustar el valor según tus necesidades
+        if ($idCategoriaSeleccionada != 0) {
             echo '<h2>PRODUCTOS DISPONIBLES</h2>';
             echo '<hr>';
             echo '<div class="contenedorProductos">';
             include('funciones.php');
 
-            // Aquí deberías recuperar y mostrar la lista de productos desde tu base de datos
             $productos = obtenerProductosPorCategoria($idCategoriaSeleccionada);
 
             if ($productos !== null) {
