@@ -20,12 +20,11 @@ $_SESSION['user'] = "pedro";
 if (isset($_SESSION['user'])) {
     // Nos conectamos a BD
     $pdo = Farmacia::conectar();
-    $idCategoria = isset($_POST['idCategoria']) ? $_POST['idCategoria'] : null;
-    var_dump($idCategoria);
-
+    $idCategoria = isset($_GET['categoria']) ? $_GET['categoria'] : null;
 
     // Cargamos los datos de los productos
     $datosProductoCategoria = Producto::obtenerProductosPorCategoria($pdo, $idCategoria);
 }
+
 
 

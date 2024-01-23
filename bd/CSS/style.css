@@ -319,6 +319,7 @@ footer {
 .contenedor-carrusel {
   background-color: #ebd3bb;
   height: 70vh;
+  width: 100%;
 }
 
 .productos-destacados {
