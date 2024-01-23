@@ -128,39 +128,7 @@
         echo '</div>';
         echo '</div>';
     }
-     // Definir el número de productos por página
-     $productosPorPagina = 6;
-
-     // Calcular el total de páginas
-     $totalPaginas = ceil(count($datosProductoCategoria) / $productosPorPagina);
- 
-     // Determinar la página actual
-     $paginaActual = isset($_GET['pagina']) ? $_GET['pagina'] : 1;
- 
-     // Calcular el índice de inicio y fin para la paginación
-     $inicio = ($paginaActual - 1) * $productosPorPagina;
-     $fin = $inicio + $productosPorPagina;
- 
-     // Mostrar solo los productos de la página actual
-     if (!empty($datosProductoCategoria)) {
-         for ($i = $inicio; $i < $fin && $i < count($datosProductoCategoria); $i++) {
-             echo '<div class="productos">';
-             // ... (código existente para mostrar información del producto)
-             echo '</div>';
-         }
-     } else {
-         echo 'No se encontraron productos para la categoría seleccionada.';
-     }
- 
-     // Agregar enlaces de paginación
-     echo '<div class="paginacion">';
-     for ($pagina = 1; $pagina <= $totalPaginas; $pagina++) {
-         $enlacePagina = "Tienda.php?categoria=$idCategoriaSeleccionada&pagina=$pagina";
-         $clasePaginaActual = ($pagina == $paginaActual) ? 'pagina-actual' : '';
-         echo "<a href=\"$enlacePagina\" class=\"$clasePaginaActual\">$pagina</a>";
-     }
-     echo '</div>';
-     ?>
+    ?>
 
 </main>
 <footer>
