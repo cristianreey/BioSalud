@@ -84,11 +84,9 @@
         echo "</form>";
         echo '</div>';
         echo '</div>';
-        exit();
         ?>
 
     </main>
-
 </body>
 
 </html>
