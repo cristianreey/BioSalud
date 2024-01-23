@@ -38,15 +38,15 @@
             echo '<div class="productos">';
             echo '<img class="w-50" src="' . $producto['url'] . '">';
             echo '<h3>' . $producto['nombre'] . '</h3>';
-            echo '<p>Cantidad: ' . $cantidad . '</p>';
+            echo '<p>Cantidad: ' . $producto['cantidad'] . '</p>';
             echo '<p>Precio: ' . $producto['precio'] . '€</p>';
             echo '</div>';
         }
 
         echo "<form action='../controller/EliminarCarritoController.php' method='POST' class='formulario'>\n";
-            echo "<button type='submit'>Vaciar</button>";
-            echo "</form>";
-            echo '</div>';
+        echo "<button type='submit'>Vaciar</button>";
+        echo "</form>";
+        echo '</div>';
         echo '</div>';
         ?>
 

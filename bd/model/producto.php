@@ -227,39 +227,44 @@ class Producto
     public static function obtenerProductosPorCategoria($pdo, $idCategoria)
     {
         try {
-            //Realizamos una query
-            $query = "SELECT * FROM productos WHERE $idCategoria = :idCategoria";
+            $query = "SELECT p.*
+                      FROM productos p
+                      WHERE p.idCategoria = :idCategoria";
 
-            $resultado = $pdo->query($query);
+            $stmt = $pdo->prepare($query);
+            $stmt->bindParam(':idCategoria', $idCategoria, PDO::PARAM_INT);
+            $stmt->execute();
 
-            //FetchAll nos saca todos los registros de la query
-            //El fetchall no se puede utilizar mas de una vez
-            $resulSet = $resultado->fetchAll();
+            // Verificar si se encontraron productos
+            if ($stmt->rowCount() > 0) {
+                $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return $productos;
+            } else {
+                return array();  // Devolver un array vacío si no hay productos
+            }
         } catch (PDOException $e) {
             print "¡Error!: " . $e->getMessage() . "<br/>";
-            die();
+            return null;
         }
-        //Devolvemos los datos de la query
-        return $resulSet;
     }
 
     public static function obtenerProductoCarrito($pdo)
     {
         try {
             // Realizamos una query sin un GUID específico, para obtener todos los productos en la tabla carrito
-            $query = "SELECT productos.*
+            $query = "SELECT productos.*, carrito.cantidad
                       FROM productos
                       INNER JOIN carrito ON productos.GUID = carrito.GUID";
-    
+
             // Preparamos la ejecución de la sentencia (statement stmt)
             $stmt = $pdo->prepare($query);
-    
+
             // Ejecutamos la consulta
             $stmt->execute();
-    
+
             // Obtenemos los resultados como un array asociativo
             $resultSet = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
             // Devolvemos los datos de los productos
             return $resultSet;
         } catch (PDOException $e) {
@@ -268,4 +273,5 @@ class Producto
             die();
         }
     }
+
 }

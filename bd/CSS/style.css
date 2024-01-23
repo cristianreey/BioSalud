@@ -330,7 +330,10 @@ footer {
 .formulario {
   display: flex;
   flex-direction: row-reverse;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
   gap: 20px;
+}
+#cantidad {
+  max-width: 20%;
 }
