@@ -32,7 +32,7 @@
             <input type="text" placeholder="Buscar productos..." />
         </div>
         <div class="usuario">
-            <a href="login.html"><span class="material-icons">account_circle</span></a>
+            <a href="login.php"><span class="material-icons">account_circle</span></a>
             <a href="carrito.php"><span class="material-icons">shopping_bag</span></a>
         </div>
     </section>

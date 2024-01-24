@@ -26,7 +26,7 @@
         <input type="text" class="input" placeholder="a" />
         <label for="" class="label">Contraseña</label>
       </div>
-      <a href="registro.html" class="enlace">¿No tienes cuenta? Regístrate aquí</a>
+      <a href="registro.php" class="enlace">¿No tienes cuenta? Regístrate aquí</a>
       <input type="submit" class="submitBtn" value="Entrar" />
     </form>
   </div>

@@ -44,6 +44,10 @@
                     <label for="" class="label">D.N.I</label>
                 </div>
                 <div class="inputContainer">
+                    <input type="number" name="telefono" class="input" placeholder="a">
+                    <label for="" class="label">Telefono</label>
+                </div>
+                <div class="inputContainer">
                     <input type="date" name="fechaNac" class="input" placeholder="a">
                     <label for="" class="label">Fecha de nacimiento</label>
                 </div>
