@@ -1,38 +1,32 @@
 <?php
 namespace controller;
 
-use bd\model\Carrito;
-use bd\model\Producto;
-use bd\model\Farmacia;
+use bd\model\Cliente;
 
-require_once("../model/conexion.php");
-require_once("../model/producto.php");
-require_once("../model/carrito.php");
 require_once("../model/cliente.php");
 
 
-// Comprobamos si la sesión ya está iniciada antes de intentar iniciarla
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
-// Comprobamos si la sesión ya está iniciada antes de intentar iniciarla
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// Después de registrar al usuario
-$estadoUsuario = Cliente::verificarEstadoCliente($email);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $codigoActivacion = $_POST['codigoActivacion'];
+    $email = $_SESSION['email'];
 
-if ($estadoUsuario === true) {
-    echo "El usuario está activo.";
-    // Aquí puedes redirigir al usuario a la página deseada
-} elseif ($estadoUsuario === false) {
-    echo "El usuario no está activo. Se requiere activación.";
-    // Redirigir al usuario a otra página
-    header("Location: ../view/codigoActivacion.php");
-    exit(); // Asegúrate de salir después de la redirección para evitar ejecución adicional de código
-} else {
-    echo "Error: " . $estadoUsuario;
+    // Verificar el código de activación
+    $codigoCorrecto = Cliente::verificarCodigoActivacion($codigoActivacion, $email);
+
+    if ($codigoCorrecto) {
+        // Actualizar el estado del usuario a activo en la base de datos
+        Cliente::activarCuentaCliente($email);
+
+        // Redirigir al usuario a la página principal
+        header("Location: ../view/Tienda.php");
+        exit();
+    } else {
+        // Código incorrecto, muestra un mensaje de error y permite al usuario intentar nuevamente
+        echo "Código incorrecto. Por favor, inténtelo nuevamente.";
+    }
 }
-
 ?>

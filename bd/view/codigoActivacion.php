@@ -10,14 +10,12 @@
 
 <body>
     <div class="signupFrm">
-        <form action="" class="form">
-            <a href="../view/login.html" class="backArrowLink">
-                <img src="../IMAGEN/angulo-izquierdo.png" alt="Flecha hacia atrás">
-            </a>
+        <form action="../controller/comprobacionActivacionController.php" method="POST" class="form">
             <h1 class="title">¿Eres tú?</h1>
+            <h4>Ingrese el código de activación enviado a su correo electrónico.</h4>
 
             <div class="inputContainer">
-                <input type="text" name="nombre" class="input" placeholder="a">
+                <input type="text" name="codigoActivacion" class="input" placeholder="a">
                 <label for="" class="label">Inserte el código</label>
             </div>
 

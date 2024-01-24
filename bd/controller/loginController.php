@@ -1,40 +1,40 @@
 <?php
 namespace controller;
 
-use bd\model\Carrito;
-use bd\model\Producto;
-use bd\model\Farmacia;
+use bd\model\Cliente;
 
-require_once("../model/conexion.php");
-require_once("../model/producto.php");
-require_once("../model/carrito.php");
 require_once("../model/cliente.php");
 
-
-// Comprobamos si la sesión ya está iniciada antes de intentar iniciarla
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
-// Comprobamos si la sesión ya está iniciada antes de intentar iniciarla
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// Procesar datos del formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Recibir datos del formulario
-    $nombre = $_POST['nombre'];
-    $email = $_POST['gmail'];
+    $email = $_POST['email'];
     $password = $_POST['contrasena'];
-    $fechaNacimiento = $_POST['fechaNac'];
-    $dni = $_POST['DNI'];
-    $telefono = $_POST['telefono'];
 
-    // Utilizar la clase Cliente para registrar al cliente
-    $mensaje = Cliente::registrarCliente($nombre, $email, $password, $fechaNacimiento, $dni, $telefono);
+    // Verificar si el usuario está activo
+    $usuarioActivo = Cliente::verificarEstadoCliente($email);
 
-    // Mostrar el mensaje
-    echo $mensaje;
+    if ($usuarioActivo) {
+        // Verificar las credenciales (ejemplo: comparar contraseña)
+        $credencialesValidas = Cliente::verificarCredenciales($email, $password);
+
+        if ($credencialesValidas) {
+            // Iniciar sesión u otras operaciones necesarias
+            $_SESSION['usuario'] = $email;
+
+            // Redirigir al usuario a la página principal
+            header("Location: ../view/Tienda.php");
+            exit();
+        } else {
+            // Credenciales inválidas, puedes mostrar un mensaje de error o redirigir a la página de inicio de sesión
+            echo "Credenciales inválidas";
+        }
+    } else {
+        // Usuario no activo, redirigir a la página de código de activación
+        header("Location: ../view/codigoActivacion.php");
+        exit();
+    }
 }
-
 ?>

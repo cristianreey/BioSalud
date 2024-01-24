@@ -81,29 +81,37 @@ class Cliente
         }
     }
 
-    public static function verificarEstadoCliente($email)
+    public static function verificarCodigoActivacion($codigoActivacion, $email)
     {
         $pdo = Farmacia::conectar();
 
         try {
-            // Utilizar prepared statements para evitar inyección SQL
-            $stmt = $pdo->prepare("SELECT activo FROM clientes WHERE gmail = ?");
-            $stmt->bindParam(1, $email);
+            // Consulta para verificar el código de activación
+            $stmt = $pdo->prepare("SELECT activo FROM clientes WHERE gmail = :email AND codigo_activacion = :codigo");
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':codigo', $codigoActivacion);
             $stmt->execute();
 
-            // Obtener el valor de la columna 'activo'
-            $resultado = $stmt->fetch(\PDO::FETCH_ASSOC);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($resultado !== false) {
-                // Devolver el estado del usuario (activo o no activo)
-                return $resultado['activo'];
+            if ($result && $result['activo'] == 0) {
+                // Código de activación correcto y el usuario no está activo
+                // Ahora puedes activar al usuario (actualizar la columna 'activo' a 1)
+                $stmtUpdate = $pdo->prepare("UPDATE clientes SET activo = 1 WHERE gmail = :email");
+                $stmtUpdate->bindParam(':email', $email);
+                $stmtUpdate->execute();
+
+                return true;
             } else {
-                // Si no se encuentra el usuario, puedes manejarlo según tus necesidades
-                return "Usuario no encontrado";
+                // Código de activación incorrecto o el usuario ya está activo
+                return false;
             }
         } catch (PDOException $e) {
-            return "Error al verificar el estado del usuario: " . $e->getMessage();
+            // Manejar errores si es necesario
+            return false;
         }
     }
+
+
 }
 ?>
