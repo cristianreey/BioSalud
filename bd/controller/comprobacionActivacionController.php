@@ -35,5 +35,4 @@ if ($estadoUsuario === true) {
     echo "Error: " . $estadoUsuario;
 }
 
-
 ?>
