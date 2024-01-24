@@ -13,10 +13,10 @@ require_once("../model/carrito.php");
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
+$pdo = Farmacia::conectar();
 
 // Procesar datos del formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $pdo = Farmacia::conectar();
     // Recibir datos del formulario
     $nombre = $_POST['nombre'];
     $email = $_POST['gmail'];
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $dni = $_POST['DNI'];
     $telefono = $_POST['telefono'];
 
-
+    var_dump($nombre);
     // Validar los datos (realiza validaciones más robustas según tus necesidades)
     if (empty($nombre) || empty($email) || empty($password) || empty($fechaNacimiento) || empty($dni) || empty($telefono)) {
         echo "Por favor, complete todos los campos.";
