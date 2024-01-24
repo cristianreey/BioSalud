@@ -10,6 +10,7 @@
     <title>BioSalud</title>
 
     <link rel="stylesheet" href="../CSS/style.css" />
+    <link rel="stylesheet" href="../CSS/csspaginacion.css" />
 
     <link rel="stylesheet" href="../vendor/bootstrap/css/bootstrap.css" />
 
@@ -21,7 +22,6 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
 
 </head>
-
 
 <header>
     <section class="section1">
@@ -68,14 +68,21 @@
     $dni = 12345;
     $fechaActual = date("Y-m-d");
 
+    $productosPorPagina = 6;
+    $paginaActual = isset($_GET['page']) ? $_GET['page'] : 1;
+    $inicio = ($paginaActual - 1) * $productosPorPagina;
+    $fin = $inicio + $productosPorPagina;
+
     if ($idCategoriaSeleccionada != 0) {
         echo '<h2>PRODUCTOS DISPONIBLES</h2>';
         echo '<hr>';
         echo '<div class="contenedorProductos">';
 
+        // Mostrar solo los productos de la página actual
+        $productosPaginados = array_slice($datosProductoCategoria, $inicio, $productosPorPagina);
 
-        if (!empty($datosProductoCategoria)) {
-            foreach ($datosProductoCategoria as $producto) {
+        if (!empty($productosPaginados)) {
+            foreach ($productosPaginados as $producto) {
                 echo '<div class="productos">';
                 echo '<img class="w-50" src="' . $producto['url'] . '">';
                 echo '<h3>' . $producto['nombre'] . '</h3>';
@@ -92,8 +99,18 @@
         } else {
             echo 'No se encontraron productos para la categoría seleccionada.';
         }
+
         echo '</div>';
+
+        // Mostrar enlaces de paginación
+        echo '<div class="pagination">';
+        for ($i = 1; $i <= ceil(count($datosProductoCategoria) / $productosPorPagina); $i++) {
+            echo '<a href="?categoria=' . $idCategoriaSeleccionada . '&page=' . $i . '">' . $i . '</a>';
+        }
+        echo '</div>';
+
     }
+
     if ($idCategoriaSeleccionada == 0) {
         echo '<div class="contenedor-carrusel">';
         echo '<div class="container d-flex align-items-center justify-content-center h-100">';
