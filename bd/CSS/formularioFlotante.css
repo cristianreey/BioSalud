@@ -4,7 +4,7 @@ body {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    background-image: url("farmaceuticos_2002_1280-3472163269.jpg");
+    background-image: url("../IMAGEN/farmaceuticos_2002_1280-3472163269.jpg");
     background-size: cover;
     font-family: "lato", sans-serif;
 }
@@ -104,4 +104,9 @@ body {
     z-index: 10;
     font-size: 14px;
     font-weight: 600;
+}
+
+.enlace {
+
+    color: #498a83;
 }
