@@ -1,3 +1,9 @@
+<?php
+// Iniciar sesión si no está iniciada
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -65,6 +71,7 @@
     include('../controller/MainController.php');
     include('../controller/ProductoPorCategoriaController.php');
 
+
     $dni = 12345;
     $fechaActual = date("Y-m-d");
 
@@ -73,42 +80,46 @@
     $inicio = ($paginaActual - 1) * $productosPorPagina;
     $fin = $inicio + $productosPorPagina;
 
-    if ($idCategoriaSeleccionada != 0) {
-        echo '<h2>PRODUCTOS DISPONIBLES</h2>';
-        echo '<hr>';
-        echo '<div class="contenedorProductos">';
+    if (!isset($_SESSION['usuario'])) {
+        header("Location: login.php");
+    } else {
+        if ($idCategoriaSeleccionada != 0) {
+            echo '<h2>PRODUCTOS DISPONIBLES</h2>';
+            echo '<hr>';
+            echo '<div class="contenedorProductos">';
 
-        // Mostrar solo los productos de la página actual
-        $productosPaginados = array_slice($datosProductoCategoria, $inicio, $productosPorPagina);
+            // Mostrar solo los productos de la página actual
+            $productosPaginados = array_slice($datosProductoCategoria, $inicio, $productosPorPagina);
 
-        if (!empty($productosPaginados)) {
-            foreach ($productosPaginados as $producto) {
-                echo '<div class="productos">';
-                echo '<img class="w-50" src="' . $producto['url'] . '">';
-                echo '<h3>' . $producto['nombre'] . '</h3>';
-                echo '<p>Precio: ' . $producto['precio'] . '€</p>';
-                echo "<form action='../controller/InsertarCarritoController.php' method='POST' class='formulario'>\n";
-                echo '<input type="number" name="cantidad" id="cantidad" min=1 value="1">';
-                echo "<input type='hidden' name='fecha' value='$fechaActual'>";
-                echo "<input type='hidden' name='GUID' value='" . $producto['GUID'] . "'>";
-                echo "<input type='hidden' name='DNI' value='$dni'>";
-                echo "<button type='submit'>Insertar</button>";
-                echo "</form>";
-                echo '</div>';
+            if (!empty($productosPaginados)) {
+                foreach ($productosPaginados as $producto) {
+                    echo '<div class="productos">';
+                    echo '<img class="w-50" src="' . $producto['url'] . '">';
+                    echo '<h3>' . $producto['nombre'] . '</h3>';
+                    echo '<p>Precio: ' . $producto['precio'] . '€</p>';
+                    echo "<form action='../controller/InsertarCarritoController.php' method='POST' class='formulario'>\n";
+                    echo '<input type="number" name="cantidad" id="cantidad" min=1 value="1">';
+                    echo "<input type='hidden' name='fecha' value='$fechaActual'>";
+                    echo "<input type='hidden' name='GUID' value='" . $producto['GUID'] . "'>";
+                    echo "<input type='hidden' name='DNI' value='$dni'>";
+                    echo "<button type='submit'>Insertar</button>";
+                    echo "</form>";
+                    echo '</div>';
+                }
+            } else {
+                echo 'No se encontraron productos para la categoría seleccionada.';
             }
-        } else {
-            echo 'No se encontraron productos para la categoría seleccionada.';
+
+            echo '</div>';
+
+            // Mostrar enlaces de paginación
+            echo '<div class="pagination">';
+            for ($i = 1; $i <= ceil(count($datosProductoCategoria) / $productosPorPagina); $i++) {
+                echo '<a href="?categoria=' . $idCategoriaSeleccionada . '&page=' . $i . '">' . $i . '</a>';
+            }
+            echo '</div>';
+
         }
-
-        echo '</div>';
-
-        // Mostrar enlaces de paginación
-        echo '<div class="pagination">';
-        for ($i = 1; $i <= ceil(count($datosProductoCategoria) / $productosPorPagina); $i++) {
-            echo '<a href="?categoria=' . $idCategoriaSeleccionada . '&page=' . $i . '">' . $i . '</a>';
-        }
-        echo '</div>';
-
     }
 
     if ($idCategoriaSeleccionada == 0) {

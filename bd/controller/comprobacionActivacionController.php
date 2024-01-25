@@ -1,32 +1,35 @@
 <?php
 namespace controller;
 
-use bd\model\Cliente;
+use bd\model\Farmacia;
 
 require_once("../model/cliente.php");
-
 
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $codigoActivacion = $_POST['codigoActivacion'];
-    $email = $_SESSION['email'];
+    if (isset($_POST['codigoActivacion'])) {
+        $codigoActivacion = $_POST['codigoActivacion'];
 
-    // Verificar el código de activación
-    $codigoCorrecto = Cliente::verificarCodigoActivacion($codigoActivacion, $email);
+        // Verificar el código de activación
+        $resultado = Cliente::compararCodigoVerificacion($codigoActivacion);
 
-    if ($codigoCorrecto) {
-        // Actualizar el estado del usuario a activo en la base de datos
-        Cliente::activarCuentaCliente($email);
-
-        // Redirigir al usuario a la página principal
-        header("Location: ../view/Tienda.php");
-        exit();
+        // Manejar el resultado según corresponda
+        if ($resultado === true) {
+            // Redirigir al usuario a la página de inicio
+            header("Location: ../view/Tienda.php");
+            exit;
+        } else {
+            // El código de activación no es válido, redirigir a una página de error o mostrar un mensaje
+            header("Location: ../view/PaginaErrorActivacion.php");
+            exit;
+        }
     } else {
-        // Código incorrecto, muestra un mensaje de error y permite al usuario intentar nuevamente
-        echo "Código incorrecto. Por favor, inténtelo nuevamente.";
+        // Si no se recibió el código de activación, redirigir a una página de error o mostrar un mensaje
+        header("Location: ../view/codigoActivacion.php");
+        exit;
     }
 }
 ?>

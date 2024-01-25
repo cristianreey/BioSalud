@@ -76,7 +76,9 @@ class Cliente
 
                     $mail->send();
 
-                    return "Registro exitoso. Se ha enviado un código de activación a su correo electrónico.";
+                    // Redirigir a otra página después de enviar el correo electrónico exitosamente
+                    header("Location: ../view/codigoActivacion.php");
+                    exit;
                 } else {
                     return "Error al registrar: " . $stmt->errorInfo()[2];
                 }
@@ -108,8 +110,18 @@ class Cliente
                     $salt = $usuario['salt'];
                     $hashedPassword = hash('sha256', $password . $salt);
 
+                    //Verificar si el usuario esta o no activo
+                    $esActivo = $usuario['activo'];
+
                     if ($hashedPassword === $usuario['contrasena']) {
-                        return "Inicio de sesión exitoso.";
+                        // Verificar si el usuario está activo
+                        if ($esActivo) {
+                            return "Inicio de sesión exitoso.";
+                        } else {
+                            // Redireccionar al usuario a otra página si no está activo
+                            header("Location: ../view/codigoActivacion.php");
+                            exit;
+                        }
                     } else {
                         return "El usuario o la contraseña no es correcto.";
                     }
@@ -121,6 +133,39 @@ class Cliente
             }
         }
     }
+
+    public static function compararCodigoVerificacion($codigoVerificacion)
+    {
+        // Realizar la conexión a la base de datos
+        $pdo = Farmacia::conectar();
+
+        try {
+            // Consultar el usuario utilizando el código de activación
+            $stmt = $pdo->prepare("SELECT * FROM clientes WHERE codigo_activacion = ?");
+            $stmt->execute([$codigoVerificacion]);
+
+            $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Verificar si se encontró un usuario con el código de activación proporcionado
+            if ($usuario) {
+                // Actualizar el estado de activación del usuario a activo
+                $stmt = $pdo->prepare("UPDATE clientes SET activo = 1 WHERE codigo_activacion = ?");
+                $stmt->execute([$codigoVerificacion]);
+
+                // Devolver verdadero para indicar que el código de activación es válido
+                return true;
+            } else {
+                // Devolver falso si no se encontró ningún usuario con el código de activación proporcionado
+                return false;
+            }
+        } catch (PDOException $e) {
+            return "Error al comparar el código de verificación: " . $e->getMessage();
+        }
+    }
+
+
+
+
 
 
 
