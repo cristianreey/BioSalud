@@ -23,7 +23,7 @@
 
 <body>
     <div class="signupFrm">
-        <form action="../controller/loginController.php" method="POST" class="form"
+        <form action="../controller/registerController.php" method="POST" class="form"
             onsubmit="return validarFormulario()">
             <a href="../view/login.html" class="backArrowLink">
                 <img src="../IMAGEN/angulo-izquierdo.png" alt="Flecha hacia atrás">

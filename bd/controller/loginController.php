@@ -1,40 +1,29 @@
 <?php
 namespace controller;
 
-use bd\model\Cliente;
+use bd\model\Farmacia;
 
 require_once("../model/cliente.php");
 
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
-
+// Comprobar si se ha enviado el formulario de inicio de sesión
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Obtener los datos del formulario
     $email = $_POST['email'];
     $password = $_POST['contrasena'];
 
-    // Verificar si el usuario está activo
-    $usuarioActivo = Cliente::verificarEstadoCliente($email);
+    // Intentar iniciar sesión con los datos proporcionados
+    $usuario = Cliente::iniciarSesion($email, $password);
 
-    if ($usuarioActivo) {
-        // Verificar las credenciales (ejemplo: comparar contraseña)
-        $credencialesValidas = Cliente::verificarCredenciales($email, $password);
-
-        if ($credencialesValidas) {
-            // Iniciar sesión u otras operaciones necesarias
-            $_SESSION['usuario'] = $email;
-
-            // Redirigir al usuario a la página principal
-            header("Location: ../view/Tienda.php");
-            exit();
-        } else {
-            // Credenciales inválidas, puedes mostrar un mensaje de error o redirigir a la página de inicio de sesión
-            echo "Credenciales inválidas";
-        }
-    } else {
-        // Usuario no activo, redirigir a la página de código de activación
-        header("Location: ../view/codigoActivacion.php");
+    // Verificar si el inicio de sesión fue exitoso
+    if ($usuario) {
+        // Iniciar sesión y redirigir al usuario a la página principal
+        session_start();
+        $_SESSION['usuario'] = $usuario;
+        header("Location: ../view/Tienda.php");
         exit();
+    } else {
+        // Mostrar un mensaje de error si las credenciales son incorrectas
+        echo "Correo electrónico o contraseña incorrectos.";
     }
 }
 ?>

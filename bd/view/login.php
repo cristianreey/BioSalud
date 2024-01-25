@@ -10,7 +10,7 @@
 
 <body>
   <div class="signupFrm">
-    <form action="../controller/comprobacionActivacionController.php" method="POST" class="form">
+    <form action="../controller/loginController.php" method="POST" class="form">
       <a href="../view/Tienda.html" class="backArrowLink">
         <img src="../IMAGEN/angulo-izquierdo.png" alt="Flecha hacia atrás">
       </a>

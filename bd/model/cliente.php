@@ -81,37 +81,32 @@ class Cliente
         }
     }
 
-    public static function verificarCodigoActivacion($codigoActivacion, $email)
+    public static function iniciarSesion($email, $password)
     {
+        // Realizar la conexión a la base de datos
         $pdo = Farmacia::conectar();
 
-        try {
-            // Consulta para verificar el código de activación
-            $stmt = $pdo->prepare("SELECT activo FROM clientes WHERE gmail = :email AND codigo_activacion = :codigo");
-            $stmt->bindParam(':email', $email);
-            $stmt->bindParam(':codigo', $codigoActivacion);
-            $stmt->execute();
+        // Consulta SQL para verificar el usuario y la contraseña
+        $sql = "SELECT * FROM clientes WHERE gmail = :email";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['email' => $email]);
+        $user = $stmt->fetch();
 
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($result && $result['activo'] == 0) {
-                // Código de activación correcto y el usuario no está activo
-                // Ahora puedes activar al usuario (actualizar la columna 'activo' a 1)
-                $stmtUpdate = $pdo->prepare("UPDATE clientes SET activo = 1 WHERE gmail = :email");
-                $stmtUpdate->bindParam(':email', $email);
-                $stmtUpdate->execute();
-
-                return true;
+        // Verificar si se encontró un usuario con ese correo electrónico
+        if ($user) {
+            // Verificar la contraseña
+            if (password_verify($password, $user['contrasena'])) {
+                // La contraseña es correcta, devolver el usuario
+                return $user;
             } else {
-                // Código de activación incorrecto o el usuario ya está activo
+                // La contraseña es incorrecta
                 return false;
             }
-        } catch (PDOException $e) {
-            // Manejar errores si es necesario
+        } else {
+            // El usuario no existe
             return false;
         }
     }
-
 
 }
 ?>
