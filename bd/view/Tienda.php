@@ -1,9 +1,7 @@
 <?php
-// Iniciar sesión si no está iniciada
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
+
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -82,6 +80,7 @@ if (session_status() == PHP_SESSION_NONE) {
 
     if (!isset($_SESSION['usuario'])) {
         header("Location: login.php");
+        exit();
     } else {
         if ($idCategoriaSeleccionada != 0) {
             echo '<h2>PRODUCTOS DISPONIBLES</h2>';
