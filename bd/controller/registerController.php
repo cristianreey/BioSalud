@@ -15,10 +15,7 @@ require_once("../model/cliente.php");
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-// Comprobamos si la sesión ya está iniciada antes de intentar iniciarla
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
+
 
 // Procesar datos del formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

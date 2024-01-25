@@ -12,18 +12,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['contrasena'];
 
     // Intentar iniciar sesión con los datos proporcionados
-    $usuario = Cliente::iniciarSesion($email, $password);
+    $mensaje = Cliente::iniciarSesion($email, $password);
 
     // Verificar si el inicio de sesión fue exitoso
-    if ($usuario) {
+    if (strpos($mensaje, "Inicio de sesión exitoso") !== false) {
         // Iniciar sesión y redirigir al usuario a la página principal
         session_start();
-        $_SESSION['usuario'] = $usuario;
+        $_SESSION['usuario'] = $email;
         header("Location: ../view/Tienda.php");
         exit();
     } else {
         // Mostrar un mensaje de error si las credenciales son incorrectas
-        echo "Correo electrónico o contraseña incorrectos.";
+        echo $mensaje;
     }
 }
+
 ?>

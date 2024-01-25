@@ -15,12 +15,17 @@ if (session_status() == PHP_SESSION_NONE) {
 
 // Si la sesión está iniciada y hay usuario, redirigimos a la web principal
 // De lo contrario, redireccionamos al login
-$_SESSION['user'] = "pedro";
-
 if (isset($_SESSION['user'])) {
+    // Obtener el usuario de la sesión
+    $user = $_SESSION['user'];
+
     // Nos conectamos a BD
     $pdo = Farmacia::conectar();
 
     // Cargamos los datos de los productos
     $datosProductoId = Producto::obtenerProductoCarrito($pdo);
+} else {
+    // Si no hay usuario, redireccionamos al login
+    header("Location: ../view/login.php");
+    exit(); // Importante para detener la ejecución del script después de redirigir
 }

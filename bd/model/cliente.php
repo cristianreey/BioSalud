@@ -1,4 +1,5 @@
 <?php
+
 namespace controller;
 
 header('Content-Type: text/html; charset=UTF-8');
@@ -8,10 +9,13 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
+require_once 'conexion.php';
 require '..\PHPMailer-master\PHPMailer-master\src\PHPMailer.php';
 require '..\PHPMailer-master\PHPMailer-master\src\Exception.php';
 require '..\PHPMailer-master\PHPMailer-master\src\SMTP.php';
 
+use PDOException;
+use PDO;
 
 class Cliente
 {
@@ -27,14 +31,18 @@ class Cliente
                 // Generar código de activación
                 $codigoActivacion = bin2hex(random_bytes(16)); // 16 bytes para obtener una cadena de 32 caracteres hexadecimal
 
+                $salt = bin2hex(random_bytes(16));
+
+                $saltedPassword = $password . $salt;
+
                 // Hash de la contraseña (mejora la seguridad almacenando contraseñas de manera segura)
-                $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+                $hashedPassword = hash('sha256', $saltedPassword);
 
                 // Definir el valor predeterminado para el campo activo como false
                 $activo = false;
 
                 // Utilizar prepared statements para evitar inyección SQL
-                $stmt = $pdo->prepare("INSERT INTO clientes (nombre, gmail, contrasena, DNI, fechaNac, telefono, activo, codigo_activacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt = $pdo->prepare("INSERT INTO clientes (nombre, gmail, contrasena, DNI, fechaNac, telefono, activo, codigo_activacion, salt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 $stmt->bindParam(1, $nombre);
                 $stmt->bindParam(2, $email);
                 $stmt->bindParam(3, $hashedPassword);
@@ -43,6 +51,7 @@ class Cliente
                 $stmt->bindParam(6, $telefono);
                 $stmt->bindParam(7, $activo, \PDO::PARAM_BOOL);
                 $stmt->bindParam(8, $codigoActivacion);
+                $stmt->bindParam(9, $salt);
 
                 if ($stmt->execute()) {
                     // Enviar el código de activación por correo electrónico usando PHPMailer
@@ -76,7 +85,7 @@ class Cliente
             } catch (PDOException $e) {
                 return "Error al registrar: " . $e->getMessage();
             } catch (Exception $e) {
-                return "Error al enviar el correo: " . $mail->ErrorInfo;
+                return "Error al enviar el correo: " . $e->getMessage();
             }
         }
     }
@@ -86,27 +95,36 @@ class Cliente
         // Realizar la conexión a la base de datos
         $pdo = Farmacia::conectar();
 
-        // Consulta SQL para verificar el usuario y la contraseña
-        $sql = "SELECT * FROM clientes WHERE gmail = :email";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute(['email' => $email]);
-        $user = $stmt->fetch();
-
-        // Verificar si se encontró un usuario con ese correo electrónico
-        if ($user) {
-            // Verificar la contraseña
-            if (password_verify($password, $user['contrasena'])) {
-                // La contraseña es correcta, devolver el usuario
-                return $user;
-            } else {
-                // La contraseña es incorrecta
-                return false;
-            }
+        if (empty($email) || empty($password)) {
+            return "Por favor, complete todos los campos.";
         } else {
-            // El usuario no existe
-            return false;
+            try {
+                // Obtener el usuario de la base de datos
+                $stmt = $pdo->prepare("SELECT * FROM clientes WHERE gmail = ?");
+                $stmt->execute([$email]);
+
+                $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($usuario) {
+                    // Verificar si la contraseña hash coincide con la almacenada en la base de datos
+                    $saltedPassword = $usuario['contrasena'];
+                    $hashedPassword = hash('sha256', $saltedPassword);
+
+                    if ($hashedPassword === $usuario['contrasena']) {
+                        return "Inicio de sesión exitoso.";
+                    } else {
+                        return "El usuario o la contraseña no es correcto.";
+                    }
+                } else {
+                    return "El usuario o la contraseña no es correcto.";
+                }
+            } catch (PDOException $e) {
+                return "Error al iniciar sesión: " . $e->getMessage();
+            }
         }
     }
 
+
+
+
 }
-?>
