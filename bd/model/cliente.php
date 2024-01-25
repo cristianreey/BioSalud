@@ -33,10 +33,8 @@ class Cliente
 
                 $salt = bin2hex(random_bytes(16));
 
-                $saltedPassword = $password . $salt;
-
                 // Hash de la contraseña (mejora la seguridad almacenando contraseñas de manera segura)
-                $hashedPassword = hash('sha256', $saltedPassword);
+                $hashedPassword = hash('sha256', $password . $salt);
 
                 // Definir el valor predeterminado para el campo activo como false
                 $activo = false;
@@ -107,8 +105,13 @@ class Cliente
 
                 if ($usuario) {
                     // Verificar si la contraseña hash coincide con la almacenada en la base de datos
+<<<<<<< HEAD
                     $saltedPassword = $password . $usuario['salt'];
                     $hashedPassword = hash('sha256', $saltedPassword);
+=======
+                    $salt = $usuario['salt'];
+                    $hashedPassword = hash('sha256', $password.$salt);
+>>>>>>> de3578e66fb53335aee907a7d3a69c34f1a588cd
 
                     $saltedPassword1 = $usuario['contrasena'] . $usuario['salt'];
                     $hashedPassword1 = hash('sha256', $saltedPassword1);
