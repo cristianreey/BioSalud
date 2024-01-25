@@ -13,7 +13,7 @@ class Farmacia
     public static function conectar()
     {
         //Cargamos las variables de conexion
-        include('/opt/lampp/htdocs/DAW/DAW/BioSalud-2/bd/settings.inc');
+        include('C:\xampp\htdocs\DES\BioSalud\bd\settings.inc');
 
         try {
             //Nos conectamos a la base de datos utilizando PDO con la cadena de conexion

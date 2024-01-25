@@ -105,21 +105,10 @@ class Cliente
 
                 if ($usuario) {
                     // Verificar si la contraseña hash coincide con la almacenada en la base de datos
-<<<<<<< HEAD
-                    $saltedPassword = $password . $usuario['salt'];
-                    $hashedPassword = hash('sha256', $saltedPassword);
-=======
                     $salt = $usuario['salt'];
-                    $hashedPassword = hash('sha256', $password.$salt);
->>>>>>> de3578e66fb53335aee907a7d3a69c34f1a588cd
+                    $hashedPassword = hash('sha256', $password . $salt);
 
-                    $saltedPassword1 = $usuario['contrasena'] . $usuario['salt'];
-                    $hashedPassword1 = hash('sha256', $saltedPassword1);
-
-                    var_dump($hashedPassword);
-                    var_dump($hashedPassword1);
-
-                    if ($hashedPassword === $hashedPassword1) {
+                    if ($hashedPassword === $usuario['contrasena']) {
                         return "Inicio de sesión exitoso.";
                     } else {
                         return "El usuario o la contraseña no es correcto.";
