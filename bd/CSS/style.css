@@ -77,6 +77,13 @@ nav a:hover {
   font-weight: bold;
   transition: color 0.3s ease;
 }
+.perfil {
+  border: solid black;
+  border-radius: 50%;
+  padding: 5px;
+  text-align: center;
+  color: white;
+}
 
 .usuario a:hover {
   color: purple;

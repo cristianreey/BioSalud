@@ -1,7 +1,6 @@
 <?php
-
+session_start();
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -36,7 +35,19 @@
             <input type="text" placeholder="Buscar productos..." />
         </div>
         <div class="usuario">
-            <a href="login.php"><span class="material-icons">account_circle</span></a>
+            <?php
+            // Verificar si el usuario ha iniciado sesión
+            if (isset($_SESSION['usuario'])) {
+                // Obtener la primera letra del nombre del usuario
+                $nombreUsuario = $_SESSION['usuario'];
+                $primeraLetra = strtoupper(substr($nombreUsuario, 0, 1));
+                // Mostrar la primera letra del nombre del usuario
+                echo "<a class='material-icons perfil' href='perfil.php'>$primeraLetra</a>";
+            } else {
+                // Si no ha iniciado sesión, mostrar el icono de inicio de sesión
+                echo "<a href='login.php'><span class='material-icons'>account_circle</span></a>";
+            }
+            ?>
             <a href="carrito.php"><span class="material-icons">shopping_bag</span></a>
         </div>
     </section>
@@ -78,48 +89,9 @@
     $inicio = ($paginaActual - 1) * $productosPorPagina;
     $fin = $inicio + $productosPorPagina;
 
-    if (!isset($_SESSION['usuario'])) {
-        header("Location: login.php");
-        exit();
-    } else {
-        if ($idCategoriaSeleccionada != 0) {
-            echo '<h2>PRODUCTOS DISPONIBLES</h2>';
-            echo '<hr>';
-            echo '<div class="contenedorProductos">';
+    $isLoggedIn = isset($_SESSION['usuario']);
 
-            // Mostrar solo los productos de la página actual
-            $productosPaginados = array_slice($datosProductoCategoria, $inicio, $productosPorPagina);
-
-            if (!empty($productosPaginados)) {
-                foreach ($productosPaginados as $producto) {
-                    echo '<div class="productos">';
-                    echo '<img class="w-50" src="' . $producto['url'] . '">';
-                    echo '<h3>' . $producto['nombre'] . '</h3>';
-                    echo '<p>Precio: ' . $producto['precio'] . '€</p>';
-                    echo "<form action='../controller/InsertarCarritoController.php' method='POST' class='formulario'>\n";
-                    echo '<input type="number" name="cantidad" id="cantidad" min=1 value="1">';
-                    echo "<input type='hidden' name='fecha' value='$fechaActual'>";
-                    echo "<input type='hidden' name='GUID' value='" . $producto['GUID'] . "'>";
-                    echo "<input type='hidden' name='DNI' value='$dni'>";
-                    echo "<button type='submit'>Insertar</button>";
-                    echo "</form>";
-                    echo '</div>';
-                }
-            } else {
-                echo 'No se encontraron productos para la categoría seleccionada.';
-            }
-
-            echo '</div>';
-
-            // Mostrar enlaces de paginación
-            echo '<div class="pagination">';
-            for ($i = 1; $i <= ceil(count($datosProductoCategoria) / $productosPorPagina); $i++) {
-                echo '<a href="?categoria=' . $idCategoriaSeleccionada . '&page=' . $i . '">' . $i . '</a>';
-            }
-            echo '</div>';
-
-        }
-    }
+    $idCategoriaSeleccionada = isset($_GET['categoria']) ? $_GET['categoria'] : 0;
 
     if ($idCategoriaSeleccionada == 0) {
         echo '<div class="contenedor-carrusel">';
@@ -155,6 +127,52 @@
         echo '</div>';
         echo '</div>';
     }
+
+    if (!$isLoggedIn && $idCategoriaSeleccionada != 0) {
+        header("Location: login.php");
+        exit();
+    }
+
+    if ($idCategoriaSeleccionada != 0) {
+        echo '<h2>PRODUCTOS DISPONIBLES</h2>';
+        echo '<hr>';
+        echo '<div class="contenedorProductos">';
+
+        // Mostrar solo los productos de la página actual
+        $productosPaginados = array_slice($datosProductoCategoria, $inicio, $productosPorPagina);
+
+        if (!empty($productosPaginados)) {
+            foreach ($productosPaginados as $producto) {
+                echo '<div class="productos">';
+                echo '<img class="w-50" src="' . $producto['url'] . '">';
+                echo '<h3>' . $producto['nombre'] . '</h3>';
+                echo '<p>Precio: ' . $producto['precio'] . '€</p>';
+                echo "<form action='../controller/InsertarCarritoController.php' method='POST' class='formulario'>\n";
+                echo '<input type="number" name="cantidad" id="cantidad" min=1 value="1">';
+                echo "<input type='hidden' name='fecha' value='$fechaActual'>";
+                echo "<input type='hidden' name='GUID' value='" . $producto['GUID'] . "'>";
+                echo "<input type='hidden' name='DNI' value='$dni'>";
+                echo "<button type='submit'>Insertar</button>";
+                echo "</form>";
+                echo '</div>';
+            }
+        } else {
+            echo 'No se encontraron productos para la categoría seleccionada.';
+        }
+
+        echo '</div>';
+
+        // Mostrar enlaces de paginación
+        echo '<div class="pagination">';
+        for ($i = 1; $i <= ceil(count($datosProductoCategoria) / $productosPorPagina); $i++) {
+            echo '<a href="?categoria=' . $idCategoriaSeleccionada . '&page=' . $i . '">' . $i . '</a>';
+        }
+        echo '</div>';
+
+    }
+
+
+
     ?>
 
 </main>
