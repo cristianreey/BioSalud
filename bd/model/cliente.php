@@ -1,6 +1,6 @@
 <?php
 
-namespace controller;
+namespace bd\model;
 
 header('Content-Type: text/html; charset=UTF-8');
 
@@ -95,6 +95,12 @@ class Cliente
         // Realizar la conexión a la base de datos
         $pdo = Farmacia::conectar();
 
+        // Iniciar o reanudar la sesión
+        session_start();
+
+        // Restablecer el tiempo de inactividad cuando se inicia sesión
+        $_SESSION['ultimoAcceso'] = time();
+
         if (empty($email) || empty($password)) {
             return "Por favor, complete todos los campos.";
         } else {
@@ -116,6 +122,9 @@ class Cliente
                     if ($hashedPassword === $usuario['contrasena']) {
                         // Verificar si el usuario está activo
                         if ($esActivo) {
+                            // Restablecer el tiempo de inactividad después de una acción exitosa
+                            $_SESSION['ultimoAcceso'] = time();
+
                             return "Inicio de sesión exitoso.";
                         } else {
                             // Redireccionar al usuario a otra página si no está activo
@@ -125,8 +134,6 @@ class Cliente
                     } else {
                         return "El usuario o la contraseña no es correcto.";
                     }
-                } else {
-                    return "El usuario o la contraseña no es correcto.";
                 }
             } catch (PDOException $e) {
                 return "Error al iniciar sesión: " . $e->getMessage();
@@ -134,6 +141,39 @@ class Cliente
         }
     }
 
+    // Nueva función para verificar el tiempo de inactividad
+    public static function verificarInactividad()
+    {
+        // Iniciar o reanudar la sesión
+        session_start();
+
+        // Verificar si la sesión está iniciada
+        if (isset($_SESSION['ultimoAcceso'])) {
+            $tiempoActual = time();
+            $tiempoTranscurrido = $tiempoActual - $_SESSION['ultimoAcceso'];
+
+            // Definir el tiempo de inactividad deseado en segundos (5 minutos en este caso)
+            $tiempoInactividad = 10;
+
+            // Verificar si ha pasado el tiempo de inactividad
+            if ($tiempoTranscurrido > $tiempoInactividad) {
+                // Cerrar la sesión y redirigir al usuario a la página de inicio de sesión
+                session_unset();
+                session_destroy();
+                header("Location: ../view/iniciarSesion.php");
+                exit;
+            } else {
+                // Restablecer el tiempo de inactividad
+                $_SESSION['ultimoAcceso'] = $tiempoActual;
+            }
+        }
+    }
+    public static function cerrarSesion()
+    {
+        session_start();
+        session_unset();
+        session_destroy();
+    }
     public static function compararCodigoVerificacion($codigoVerificacion)
     {
         // Realizar la conexión a la base de datos
@@ -167,7 +207,8 @@ class Cliente
 
 
 
-
-
-
 }
+
+
+
+

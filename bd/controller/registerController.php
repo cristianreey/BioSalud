@@ -4,6 +4,8 @@ namespace controller;
 use bd\model\Carrito;
 use bd\model\Producto;
 use bd\model\Farmacia;
+use bd\model\Cliente;
+
 
 require_once("../model/conexion.php");
 require_once("../model/producto.php");

@@ -2,8 +2,12 @@
 namespace controller;
 
 use bd\model\Farmacia;
+use bd\model\Cliente;
 
 require_once("../model/cliente.php");
+
+// Verificar inactividad antes de procesar cualquier solicitud
+Cliente::verificarInactividad();
 
 // Comprobar si se ha enviado el formulario de inicio de sesión
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -26,5 +30,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo $mensaje;
     }
 }
-
 ?>

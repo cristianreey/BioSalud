@@ -11,7 +11,7 @@
 <body>
   <div class="signupFrm">
     <form action="../controller/loginController.php" method="POST" class="form">
-      <a href="../view/Tienda.html" class="backArrowLink">
+      <a href="../view/Tienda.php" class="backArrowLink">
         <img src="../IMAGEN/angulo-izquierdo.png" alt="Flecha hacia atrás">
       </a>
       <h1 class="title">Iniciar de sesión</h1>
