@@ -1,7 +1,7 @@
 <?php
 namespace controller;
 
-use bd\model\Farmacia;
+use bd\model\Cliente;
 
 require_once("../model/cliente.php");
 

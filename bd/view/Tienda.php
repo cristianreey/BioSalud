@@ -1,7 +1,20 @@
 <?php
 session_start();
 
+// Comprobar si la sesión está activa
+if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > 10)) {
+    // Si han pasado más de 10 segundos, destruir la sesión (ajusta este valor según tus necesidades)
+    session_unset();
+    session_destroy();
+    header("Location: login.php"); // Redirige al usuario a la página de inicio de sesión
+    exit();
+}
+
+// Actualizar el tiempo de actividad de la sesión
+$_SESSION['last_activity'] = time();
 ?>
+
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -37,16 +50,15 @@ session_start();
         </div>
         <div class="usuario">
             <?php
-            // Verificar si el usuario ha iniciado sesión
-            if (isset($_SESSION['usuario'])) {
-                // Obtener la primera letra del nombre del usuario
+            if (!isset($_SESSION['usuario'])) {
+                // Código para mostrar el icono de inicio de sesión
+                echo "<a href='login.php'><span class='material-icons'>account_circle</span></a>";
+            } else {
+                // Código para mostrar la primera letra del nombre del usuario y el enlace de cierre de sesión
                 $nombreUsuario = $_SESSION['usuario'];
                 $primeraLetra = strtoupper(substr($nombreUsuario, 0, 1));
-                // Mostrar la primera letra del nombre del usuario
                 echo "<a class='material-icons perfil' href='perfil.php'>$primeraLetra</a>";
-            } else {
-                // Si no ha iniciado sesión, mostrar el icono de inicio de sesión
-                echo "<a href='login.php'><span class='material-icons'>account_circle</span></a>";
+                echo "<a href='?logout=true'><span class='material-icons'>exit_to_app</span></a>";
             }
             ?>
             <a href="carrito.php"><span class="material-icons">shopping_bag</span></a>
