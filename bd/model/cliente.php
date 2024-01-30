@@ -190,68 +190,40 @@ class Cliente
     public static function updateCliente($pdo, $cliente)
     {
         try {
-            // Query para modificar
-            $query = "UPDATE clientes SET";
+            // Preparar la consulta SQL para actualizar los datos del cliente
+            $sql = "UPDATE clientes SET nombre = :nombre, telefono = :telefono, fechaNac = :fechaNac, DNI = :DNI WHERE gmail = :gmail";
 
-            // Si no nos meten nada para modificar devolvemos error
-            if (count($cliente) == 0) {
-                return -1;
-            }
+            // Preparar la declaración
+            $stmt = $pdo->prepare($sql);
 
-            // Building the SET clause of the query
-            $setClauses = array();
-            if (isset($cliente['nombre'])) {
-                $setClauses[] = "nombre = :nombre";
-            }
-            if (isset($cliente['DNI'])) {
-                $setClauses[] = "DNI = :DNI";
-            }
-            if (isset($cliente['gmail'])) {
-                $setClauses[] = "gmail = :gmail";
-            }
-            if (isset($cliente['fechaNac'])) {
-                $setClauses[] = "fechaNac = :fechaNac";
-            }
-            if (isset($cliente['telefono'])) {
-                $setClauses[] = "telefono = :telefono";
-            }
+            // Obtener los datos del cliente
+            $nombre = $cliente['nombre'];
+            $telefono = $cliente['telefono'];
+            $fechaNac = $cliente['fechaNac'];
+            $DNI = $cliente['DNI'];
+            $gmail = $cliente['gmail'];
 
-            // Joining the SET clauses
-            $query .= ' ' . implode(', ', $setClauses);
+            // Vincular los parámetros con los valores recibidos del formulario
+            $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
+            $stmt->bindParam(':telefono', $telefono, PDO::PARAM_STR);
+            $stmt->bindParam(':fechaNac', $fechaNac, PDO::PARAM_STR);
+            $stmt->bindParam(':DNI', $DNI, PDO::PARAM_STR);
+            $stmt->bindParam(':gmail', $gmail, PDO::PARAM_STR);
 
-            $stmt = $pdo->prepare($query);
-
-            // Binding parameters
-            if (isset($cliente['nombre'])) {
-                $stmt->bindValue(':nombre', $cliente['nombre']);
-            }
-            if (isset($cliente['DNI'])) {
-                $stmt->bindValue(':DNI', $cliente['DNI']);
-            }
-            if (isset($cliente['gmail'])) {
-                $stmt->bindValue(':gmail', $cliente['gmail']);
-            }
-            if (isset($cliente['fechaNac'])) {
-                $stmt->bindValue(':fechaNac', $cliente['fechaNac']);
-            }
-            if (isset($cliente['telefono'])) {
-                $stmt->bindValue(':telefono', $cliente['telefono']);
-            }
-
-            // Ejecutamos la query
+            // Ejecutar la consulta
             $stmt->execute();
 
-            // Sacamos la cantidad de filas afectadas
-            $filas_afectadas = $stmt->rowCount();
-
-            return $filas_afectadas;
+            // Retornar verdadero si la actualización fue exitosa
+            return true;
         } catch (PDOException $e) {
-            print "¡Error!: " . $e->getMessage() . "<br/>";
-            return -1;
-        } finally {
-            $pdo = null;
+            // Manejar cualquier error de base de datos
+            echo "Error al actualizar los datos: " . $e->getMessage();
+            // Retornar falso si hubo algún error
+            return false;
         }
     }
+
+
 
 
 
