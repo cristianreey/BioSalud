@@ -187,6 +187,73 @@ class Cliente
     }
 
 
+    public static function updateCliente($pdo, $cliente)
+    {
+        try {
+            // Query para modificar
+            $query = "UPDATE clientes SET";
+
+            // Si no nos meten nada para modificar devolvemos error
+            if (count($cliente) == 0) {
+                return -1;
+            }
+
+            // Building the SET clause of the query
+            $setClauses = array();
+            if (isset($cliente['nombre'])) {
+                $setClauses[] = "nombre = :nombre";
+            }
+            if (isset($cliente['DNI'])) {
+                $setClauses[] = "DNI = :DNI";
+            }
+            if (isset($cliente['gmail'])) {
+                $setClauses[] = "gmail = :gmail";
+            }
+            if (isset($cliente['fechaNac'])) {
+                $setClauses[] = "fechaNac = :fechaNac";
+            }
+            if (isset($cliente['telefono'])) {
+                $setClauses[] = "telefono = :telefono";
+            }
+
+            // Joining the SET clauses
+            $query .= ' ' . implode(', ', $setClauses);
+
+            $stmt = $pdo->prepare($query);
+
+            // Binding parameters
+            if (isset($cliente['nombre'])) {
+                $stmt->bindValue(':nombre', $cliente['nombre']);
+            }
+            if (isset($cliente['DNI'])) {
+                $stmt->bindValue(':DNI', $cliente['DNI']);
+            }
+            if (isset($cliente['gmail'])) {
+                $stmt->bindValue(':gmail', $cliente['gmail']);
+            }
+            if (isset($cliente['fechaNac'])) {
+                $stmt->bindValue(':fechaNac', $cliente['fechaNac']);
+            }
+            if (isset($cliente['telefono'])) {
+                $stmt->bindValue(':telefono', $cliente['telefono']);
+            }
+
+            // Ejecutamos la query
+            $stmt->execute();
+
+            // Sacamos la cantidad de filas afectadas
+            $filas_afectadas = $stmt->rowCount();
+
+            return $filas_afectadas;
+        } catch (PDOException $e) {
+            print "¡Error!: " . $e->getMessage() . "<br/>";
+            return -1;
+        } finally {
+            $pdo = null;
+        }
+    }
+
+
 
 
 
