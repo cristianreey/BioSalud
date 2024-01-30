@@ -7,24 +7,26 @@ use bd\model\Cliente;
 require_once("../model/cliente.php");
 
 
-// Comprobar si se ha enviado el formulario de inicio de sesión
+// Comprueba si se ha enviado el formulario de inicio de sesión
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Obtener los datos del formulario
+    // Obtén los datos del formulario
     $email = $_POST['email'];
     $password = $_POST['contrasena'];
 
-    // Intentar iniciar sesión con los datos proporcionados
-    $mensaje = Cliente::iniciarSesion($email, $password);
-
-    // Verificar si el inicio de sesión fue exitoso
-    if (strpos($mensaje, "Inicio de sesión exitoso") !== false) {
-        // Iniciar sesión y redirigir al usuario a la página principal
-        session_start();
+    // Aquí deberías validar y autenticar el inicio de sesión
+    // Si el inicio de sesión es exitoso, configura la sesión y redirige al usuario
+    if (Cliente::iniciarSesion($email, $password)) {
+        // Inicia sesión y redirige al usuario a la página principal
         $_SESSION['usuario'] = $email;
         header("Location: ../view/Tienda.php");
         exit();
     } else {
-        // Mostrar un mensaje de error si las credenciales son incorrectas
-        echo $mensaje;
+        // Si el inicio de sesión falla, puedes mostrar un mensaje de error
+        echo "Credenciales incorrectas. Por favor, inténtelo de nuevo.";
     }
+} else {
+    exit();
 }
+
+
+

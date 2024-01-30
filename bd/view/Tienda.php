@@ -6,7 +6,7 @@ if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > 
     // Si han pasado más de 10 segundos, destruir la sesión (ajusta este valor según tus necesidades)
     session_unset();
     session_destroy();
-    header("Location: login.php"); // Redirige al usuario a la página de inicio de sesión
+    header("Location: login.php");
     exit();
 }
 
