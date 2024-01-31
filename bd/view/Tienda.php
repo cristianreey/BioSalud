@@ -1,8 +1,13 @@
 <?php
 session_start();
 
+
 // Comprobar si la sesión está activa
 if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > 300)) {
+<<<<<<< HEAD
+=======
+    // Si han pasado más de 300 segundos, destruir la sesión (ajusta este valor según tus necesidades)
+>>>>>>> 7997779e2f75fd58fb63f23ddfd9d89c9273dd2c
     session_unset();
     session_destroy();
     header("Location: login.php");
@@ -57,7 +62,7 @@ $_SESSION['last_activity'] = time();
                 $nombreUsuario = $_SESSION['usuario'];
                 $primeraLetra = strtoupper(substr($nombreUsuario, 0, 1));
                 echo "<a class='material-icons perfil' href='perfil.php'>$primeraLetra</a>";
-                echo "<a href='?logout=true'><span class='material-icons'>exit_to_app</span></a>";
+                echo "<a href='../controller/logoutController.php'><span class='material-icons'>exit_to_app</span></a>";
             }
             ?>
             <a href="carrito.php"><span class="material-icons">shopping_bag</span></a>
@@ -93,7 +98,10 @@ $_SESSION['last_activity'] = time();
     include('../controller/ProductoPorCategoriaController.php');
     include('../controller/VerDatosClienteController.php');
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7997779e2f75fd58fb63f23ddfd9d89c9273dd2c
     $fechaActual = date("Y-m-d");
 
     $productosPorPagina = 6;
@@ -153,6 +161,7 @@ $_SESSION['last_activity'] = time();
         // Mostrar solo los productos de la página actual
         $productosPaginados = array_slice($datosProductoCategoria, $inicio, $productosPorPagina);
 
+<<<<<<< HEAD
         if (isset($_SESSION['usuario'])) {
             $emailUsuario = $_SESSION['usuario'];
             foreach ($datosCliente as $cliente) {
@@ -162,6 +171,9 @@ $_SESSION['last_activity'] = time();
                 }
             }
         }
+=======
+        include("../controller/VerDatosClientesController.php");
+>>>>>>> 7997779e2f75fd58fb63f23ddfd9d89c9273dd2c
 
         if (!empty($productosPaginados)) {
             foreach ($productosPaginados as $producto) {
@@ -175,7 +187,11 @@ $_SESSION['last_activity'] = time();
                 echo "<input type='hidden' name='precio' value='" . $producto['precio'] . "'>";
                 echo "<input type='hidden' name='fecha' value='$fechaActual'>";
                 echo "<input type='hidden' name='GUID' value='" . $producto['GUID'] . "'>";
+<<<<<<< HEAD
                 echo "<input type='hidden' name='DNI' value='" . $datosUsuario['DNI'] . "'>";
+=======
+                echo "<input type='hidden' name='DNI' value='" . $datosCliente['DNI'] . "'>";
+>>>>>>> 7997779e2f75fd58fb63f23ddfd9d89c9273dd2c
                 echo "<button type='submit'>Insertar</button>";
                 echo "</form>";
                 echo '</div>';
