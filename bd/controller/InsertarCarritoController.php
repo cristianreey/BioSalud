@@ -11,8 +11,6 @@ include('..\model\conexion.php');
 
 session_start();
 
-$_SESSION['user'] = "pedro";
-
 if (isset($_SESSION['user'])) {
     //Si el usuario esta logado insertamos el producto
     //Si no hay conexion activa nos conectamos
@@ -25,13 +23,16 @@ if (isset($_SESSION['user'])) {
     $cantidad = ModelUtils::validarDatos($_POST['cantidad']);
     $guid = ModelUtils::validarDatos($_POST['GUID']);
     $dni = ModelUtils::validarDatos($_POST['DNI']);
+    $precio = ModelUtils::validarDatos($_POST['precio']);
+
 
     //Creamos el array asociativo con los datos del producto
     $carrito_nuevo = [
         'fecha' => $_POST['fecha'],
         'cantidad' => $_POST['cantidad'],
         'GUID' => $_POST['GUID'],
-        'DNI' => $_POST['DNI']
+        'DNI' => $_POST['DNI'],
+        'precio' => $_POST['precio']
     ];
 
     //Insertamos el producto

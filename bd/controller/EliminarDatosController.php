@@ -1,37 +1,33 @@
-<?php 
-namespace controller;
+<?php
+
+use bd\model\Carrito;
+use bd\model\Farmacia;
+
+require_once('../model/conexion.php');
+require_once('../model/carrito.php');
 
 
-use bd\model\Producto as ModelProducto;
-use bd\model\Farmacia as ModelUtils;
+// Comprobar si se ha enviado el formulario
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['producto_id'])) {
 
-include ('..\model\producto.php');
-include ('..\model\conexion.php');
+  // Obtener el ID del producto a eliminar
+  $productoId = $_POST['producto_id'];
+  var_dump($productoId);
 
-session_start();
+  // Lógica para eliminar el producto del carrito
+  $pdo = Farmacia::conectar();
 
-$_SESSION['user']="pedro";
-
-if (isset($_SESSION['user']))
-{
-//Si el usuario esta logado eliminamos el producto
-//Si no hay conexion activa nos conectamos
-if (!isset($pdo))
-$pdo= ModelUtils::conectar();
-
-//Cargamos el id del producto a eliminar
-$idProd = $_POST['GUID'];
-
-//Eliminamos el producto
-//Habria que comprobar que se ha borrado y que idProd es numerico no nulo
-ModelProducto::delProducto($pdo,$idProd);
-
-//Cargamos la vista principal
-  //Cargamos los datos de los productos
-  $datosProducto = ModelProducto::getProducto($pdo);
-
-  //Cargamos la vista
-  include('..\view/Tienda.php');
+  $filas_afectadas = Carrito::delCarrito($pdo, $productoId);
+  var_dump($filas_afectadas);
+  if ($filas_afectadas > 0) {
+    // Éxito: redirigir a la página del carrito
+    header('Location: ../view/CarritoTienda.php');
+  } else {
+    // Error: manejar de acuerdo a tus necesidades
+    echo "Error al eliminar el producto del carrito.";
+  }
+} else {
+  // Si no se reciben datos válidos, redirigir a la página del carrito
+  header('Location: ../view/CarritoTienda.php');
 }
-
 ?>

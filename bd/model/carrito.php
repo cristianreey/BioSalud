@@ -30,27 +30,29 @@ class Carrito
         return $resulSet;
     }
 
-    public static function delCarrito($pdo, $guid)
+    public static function delCarrito($pdo, $idProducto)
     {
         try {
-            //Borramos todos los carritos
-            $query = "DELETE from carrito where GUID =:GUID";
+            // Borramos el producto del carrito
+            $query = "DELETE FROM carrito WHERE GUID = :GUID";
 
-            //Prepararmos la ejecucion de la sentencia (statement stmt)
+            // Preparamos la ejecución de la sentencia (statement stmt)
             $stmt = $pdo->prepare($query);
 
-            //Asociamos el valor del parametro idcarrito a la posicion de :id
-            $stmt->bindValue(':GUID', $guid);
+            // Asociamos el valor del parámetro id al marcador :id
+            $stmt->bindValue(':GUID', $idProducto);
 
+            // Ejecutamos la consulta
             $stmt->execute();
 
-            $filas_afectadas = $stmt->rowCount();
-
-            return $filas_afectadas;
+            // Devolvemos la cantidad de filas afectadas
+            return $stmt->rowCount();
         } catch (PDOException $e) {
+            // Manejo de errores
             print "¡Error!: " . $e->getMessage() . "<br/>";
-            die();
+            return -1;  // Indica un error
         } finally {
+            // Cerramos la conexión en el bloque finally
             $pdo = null;
         }
     }
@@ -161,29 +163,58 @@ class Carrito
     public static function insertCarrito($pdo, $carrito)
     {
         try {
-            // HACEMOS UN EJEMPLO DE INSERT
-            // En lugar de un valor que nos llega inseguro ponemos siempre ?
-            // asi evitamos la inyeccion sql
-            $query = "INSERT INTO carrito (fecha, cantidad, GUID, DNI) VALUES (:fecha, :cantidad, :GUID, :DNI)";
+            // Obtenemos el carrito completo
+            $carritoCompleto = self::getCarrito($pdo);
 
-            // De esta forma hay que preparar primero la sentencia
+            // Variable para determinar si el producto ya existe en el carrito
+            $productoExistente = false;
+
+            // Iteramos sobre los productos en el carrito
+            foreach ($carritoCompleto as $productoActual) {
+                if ($productoActual['GUID'] == $carrito['GUID']) {
+                    // Si el producto ya está en el carrito, actualizamos la cantidad y el precio
+                    $productoExistente = true;
+                    $query = "UPDATE carrito SET cantidad = cantidad + :cantidad WHERE GUID = :GUID";
+                    break; // Salimos del bucle porque ya encontramos el producto
+                }
+            }
+
+            // Si el producto no existe en el carrito, realizamos la inserción
+            if (!$productoExistente) {
+                $query = "INSERT INTO carrito (fecha, cantidad, GUID, DNI, precio) VALUES (:fecha, :cantidad, :GUID, :DNI, :precio)";
+            }
+
+            // Preparamos la sentencia
             $stmt = $pdo->prepare($query);
 
-            // Asignamos el valor en el lugar de la :variable
+            // Asignamos los valores
             $stmt->bindValue(':fecha', $carrito['fecha']);
             $stmt->bindValue(':cantidad', $carrito['cantidad']);
-            $stmt->bindValue(':GUID', $carrito['GUID']);
-            $stmt->bindValue(':DNI', $carrito['DNI']);
+
+            // Si el producto ya existe, sumamos las cantidades y precios existentes
+            if ($productoExistente) {
+                $stmt->bindValue(':cantidad', $carrito['cantidad']);
+                $stmt->bindValue(':precio', $carrito['precio']);
+            } else {
+                $stmt->bindValue(':GUID', $carrito['GUID']);
+                $stmt->bindValue(':DNI', $carrito['DNI']);
+                $stmt->bindValue(':precio', $carrito['precio']);
+            }
 
             // Ejecutamos la query
             $stmt->execute();
+
+            // Devolvemos la cantidad de filas afectadas
+            return $stmt->rowCount();
         } catch (PDOException $e) {
+            // Manejo de errores
             print "¡Error!: " . $e->getMessage() . "<br/>";
             return -1;
         } finally {
-            $pdo = null;
+            // No cierres la conexión aquí, déjalo para el código que llama a esta función
         }
     }
+
 
     public static function getProductoCarrito($pdo)
     {

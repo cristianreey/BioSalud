@@ -2,8 +2,7 @@
 session_start();
 
 // Comprobar si la sesión está activa
-if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > 10)) {
-    // Si han pasado más de 10 segundos, destruir la sesión (ajusta este valor según tus necesidades)
+if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > 300)) {
     session_unset();
     session_destroy();
     header("Location: login.php");
@@ -92,9 +91,9 @@ $_SESSION['last_activity'] = time();
     <?php
     include('../controller/MainController.php');
     include('../controller/ProductoPorCategoriaController.php');
+    include('../controller/VerDatosClienteController.php');
 
 
-    $dni = 12345;
     $fechaActual = date("Y-m-d");
 
     $productosPorPagina = 6;
@@ -154,17 +153,29 @@ $_SESSION['last_activity'] = time();
         // Mostrar solo los productos de la página actual
         $productosPaginados = array_slice($datosProductoCategoria, $inicio, $productosPorPagina);
 
+        if (isset($_SESSION['usuario'])) {
+            $emailUsuario = $_SESSION['usuario'];
+            foreach ($datosCliente as $cliente) {
+                if ($cliente['gmail'] === $emailUsuario) {
+                    $datosUsuario = $cliente;
+                    break;
+                }
+            }
+        }
+
         if (!empty($productosPaginados)) {
             foreach ($productosPaginados as $producto) {
+
                 echo '<div class="productos">';
                 echo '<img class="w-50" src="' . $producto['url'] . '">';
                 echo '<h3>' . $producto['nombre'] . '</h3>';
                 echo '<p>Precio: ' . $producto['precio'] . '€</p>';
                 echo "<form action='../controller/InsertarCarritoController.php' method='POST' class='formulario'>\n";
                 echo '<input type="number" name="cantidad" id="cantidad" min=1 value="1">';
+                echo "<input type='hidden' name='precio' value='" . $producto['precio'] . "'>";
                 echo "<input type='hidden' name='fecha' value='$fechaActual'>";
                 echo "<input type='hidden' name='GUID' value='" . $producto['GUID'] . "'>";
-                echo "<input type='hidden' name='DNI' value='$dni'>";
+                echo "<input type='hidden' name='DNI' value='" . $datosUsuario['DNI'] . "'>";
                 echo "<button type='submit'>Insertar</button>";
                 echo "</form>";
                 echo '</div>';

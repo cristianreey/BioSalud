@@ -76,15 +76,23 @@
             echo '<h3>' . $producto['nombre'] . '</h3>';
             echo '<p>Cantidad: ' . $producto['cantidad'] . '</p>';
             echo '<p>Precio: ' . $producto['precio'] . '€</p>';
+
+            // Botón para borrar el producto del carrito
+            echo "<form action='../controller/EliminarDatosController.php' method='POST' class='formulario'>\n";
+            echo "<input type='hidden' name='producto_id' value='" . $producto['GUID'] . "'>";
+            echo "<button type='submit'>Eliminar del Carrito</button>";
+            echo "</form>";
             echo '</div>';
         }
 
-        echo "<form action='../controller/EliminarCarritoController.php' method='POST' class='formulario'>\n";
-        echo "<button type='submit'>Vaciar</button>";
+        // Formulario para actualizar el carrito completo
+        echo "<form action='../controller/ActualizarCarritoController.php' method='POST' class='formulario'>\n";
+        echo "<button type='submit'>Actualizar Carrito</button>";
         echo "</form>";
         echo '</div>';
         echo '</div>';
         ?>
+
 
     </main>
 </body>
