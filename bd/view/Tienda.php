@@ -93,8 +93,6 @@ $_SESSION['last_activity'] = time();
     include('../controller/MainController.php');
     include('../controller/ProductoPorCategoriaController.php');
 
-
-    $dni = 12345;
     $fechaActual = date("Y-m-d");
 
     $productosPorPagina = 6;
@@ -154,6 +152,8 @@ $_SESSION['last_activity'] = time();
         // Mostrar solo los productos de la página actual
         $productosPaginados = array_slice($datosProductoCategoria, $inicio, $productosPorPagina);
 
+        include("../controller/VerDatosClientesController.php");
+
         if (!empty($productosPaginados)) {
             foreach ($productosPaginados as $producto) {
                 echo '<div class="productos">';
@@ -164,7 +164,7 @@ $_SESSION['last_activity'] = time();
                 echo '<input type="number" name="cantidad" id="cantidad" min=1 value="1">';
                 echo "<input type='hidden' name='fecha' value='$fechaActual'>";
                 echo "<input type='hidden' name='GUID' value='" . $producto['GUID'] . "'>";
-                echo "<input type='hidden' name='DNI' value='$dni'>";
+                echo "<input type='hidden' name='DNI' value='" . $datosCliente['DNI'] . "'>";
                 echo "<button type='submit'>Insertar</button>";
                 echo "</form>";
                 echo '</div>';
