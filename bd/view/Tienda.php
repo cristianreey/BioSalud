@@ -1,9 +1,10 @@
 <?php
 session_start();
 
+
 // Comprobar si la sesión está activa
-if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > 10)) {
-    // Si han pasado más de 10 segundos, destruir la sesión (ajusta este valor según tus necesidades)
+if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > 300)) {
+    // Si han pasado más de 300 segundos, destruir la sesión (ajusta este valor según tus necesidades)
     session_unset();
     session_destroy();
     header("Location: login.php");
@@ -58,7 +59,7 @@ $_SESSION['last_activity'] = time();
                 $nombreUsuario = $_SESSION['usuario'];
                 $primeraLetra = strtoupper(substr($nombreUsuario, 0, 1));
                 echo "<a class='material-icons perfil' href='perfil.php'>$primeraLetra</a>";
-                echo "<a href='?logout=true'><span class='material-icons'>exit_to_app</span></a>";
+                echo "<a href='../controller/logoutController.php'><span class='material-icons'>exit_to_app</span></a>";
             }
             ?>
             <a href="carrito.php"><span class="material-icons">shopping_bag</span></a>
