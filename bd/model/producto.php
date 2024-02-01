@@ -252,7 +252,7 @@ class Producto
     {
         try {
             // Realizamos una query sin un GUID específico, para obtener todos los productos en la tabla carrito
-            $query = "SELECT productos.*, carrito.cantidad
+            $query = "SELECT productos.*, carrito.cantidad, carrito.precio
                       FROM productos
                       INNER JOIN carrito ON productos.GUID = carrito.GUID";
 

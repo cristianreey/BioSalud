@@ -81,74 +81,56 @@ class Carrito
 
     public static function updateCarrito($pdo, $carrito)
     {
-
         try {
-            //Query para modificar 
-            $query = "UPDATE carrito set ";
+            // Query para modificar 
+            $query = "UPDATE carrito SET";
 
-            //Si no nos meten nada para modificar devolvemos error
+            // Si no nos meten nada para modificar devolvemos error
             if (count($carrito) == 0)
                 return -1;
 
-            if (isset($carrito['fecha']))
-                $query = $query . " fecha=:fecha";
+            // Construir la parte SET de la consulta
+            $setClause = "";
+
+            if (isset($carrito['fecha'])) {
+                $setClause .= " fecha = :fecha";
+            }
 
             if (isset($carrito['cantidad'])) {
-                //Si la cadena de la query tiene mas caracteres de la inicial, implica que antes hay un campo 
-                //Modificado y tengo que poner la ,
-                if (strlen($query) > 20)
-                    $query = $query . ',';
-                $query = $query . " cantidad=:cantidad";
+                if (!empty($setClause)) {
+                    $setClause .= ",";
+                }
+                $setClause .= " cantidad = :cantidad";
             }
 
-            if (isset($carrito['DNI'])) {
-                if (strlen($query) > 20)
-                    $query = $query . ',';
+            // Agregar la parte SET a la consulta
+            $query .= $setClause;
 
-                $query = $query . " DNI=:id";
-            }
+            // Añadir la condición WHERE
+            $query .= " WHERE GUID = :GUID";
 
-            if (isset($carrito['GUID'])) {
-                if (strlen($query) > 20)
-                    $query = $query . ',';
-
-                $query = $query . " where GUID=:id";
-            }
-
-            if (isset($carrito['id'])) {
-                if (strlen($query) > 20)
-                    $query = $query . ',';
-
-                $query = $query . " where id=:id";
-            }
-
-            //nombre, descripcion, peso, precio, tamano where idcarritos
-            //Depuracion cutre mostramos la query
+            // Depuración cutre mostramos la query
             echo $query . "<br/>";
 
+            // Preparamos la consulta
             $stmt = $pdo->prepare($query);
 
-            //Asociamos a los campos de la query los valores
-
-            if (isset($carrito['fecha']))
+            // Asociamos a los campos de la query los valores
+            if (isset($carrito['fecha'])) {
                 $stmt->bindValue(':fecha', $carrito['fecha']);
+            }
 
-            if (isset($carrito['cantidad']))
+            if (isset($carrito['cantidad'])) {
                 $stmt->bindValue(':cantidad', $carrito['cantidad']);
+            }
 
-            if (isset($carrito['GUID']))
-                $stmt->bindValue(':id', $carrito['GUID']);
+            // Agregamos la vinculación para el GUID
+            $stmt->bindValue(':GUID', $carrito['GUID']);
 
-            if (isset($carrito['DNI']))
-                $stmt->bindValue(':id', $carrito['DNI']);
-
-            if (isset($carrito['id']))
-                $stmt->bindValue(':id', $carrito['id']);
-
-            //Ejecutamos la query
+            // Ejecutamos la query
             $stmt->execute();
 
-            //Sacamos la cantidad de filas afectadas
+            // Sacamos la cantidad de filas afectadas
             $filas_afectadas = $stmt->rowCount();
 
             return $filas_afectadas;
@@ -163,43 +145,47 @@ class Carrito
     public static function insertCarrito($pdo, $carrito)
     {
         try {
+            // Verificamos si el producto ya existe en el carrito
+            $productoExistente = false;
+
             // Obtenemos el carrito completo
             $carritoCompleto = self::getCarrito($pdo);
-
-            // Variable para determinar si el producto ya existe en el carrito
-            $productoExistente = false;
 
             // Iteramos sobre los productos en el carrito
             foreach ($carritoCompleto as $productoActual) {
                 if ($productoActual['GUID'] == $carrito['GUID']) {
                     // Si el producto ya está en el carrito, actualizamos la cantidad y el precio
                     $productoExistente = true;
-                    $query = "UPDATE carrito SET cantidad = cantidad + :cantidad WHERE GUID = :GUID";
+                    $query = "UPDATE carrito SET cantidad = :cantidad + cantidad, precio = :precio * cantidad WHERE  GUID = :GUID";
                     break; // Salimos del bucle porque ya encontramos el producto
                 }
             }
 
             // Si el producto no existe en el carrito, realizamos la inserción
             if (!$productoExistente) {
-                $query = "INSERT INTO carrito (fecha, cantidad, GUID, DNI, precio) VALUES (:fecha, :cantidad, :GUID, :DNI, :precio)";
+                $query = "INSERT INTO carrito (fecha, cantidad, GUID, DNI, precio) VALUES (:fecha, :cantidad, :GUID, :DNI, :precio * :cantidad)";
             }
 
             // Preparamos la sentencia
             $stmt = $pdo->prepare($query);
 
-            // Asignamos los valores
-            $stmt->bindValue(':fecha', $carrito['fecha']);
-            $stmt->bindValue(':cantidad', $carrito['cantidad']);
-
-            // Si el producto ya existe, sumamos las cantidades y precios existentes
             if ($productoExistente) {
                 $stmt->bindValue(':cantidad', $carrito['cantidad']);
+                $stmt->bindValue(':GUID', $carrito['GUID']);
                 $stmt->bindValue(':precio', $carrito['precio']);
+                $stmt->bindValue(':cantidad', $carrito['precio']);
+
             } else {
+                // Asignamos los valores
+                $stmt->bindValue(':fecha', $carrito['fecha']);
+                $stmt->bindValue(':cantidad', $carrito['cantidad']);
                 $stmt->bindValue(':GUID', $carrito['GUID']);
                 $stmt->bindValue(':DNI', $carrito['DNI']);
                 $stmt->bindValue(':precio', $carrito['precio']);
             }
+
+
+
 
             // Ejecutamos la query
             $stmt->execute();
@@ -214,6 +200,7 @@ class Carrito
             // No cierres la conexión aquí, déjalo para el código que llama a esta función
         }
     }
+
 
 
     public static function getProductoCarrito($pdo)
