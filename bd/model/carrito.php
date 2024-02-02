@@ -79,68 +79,6 @@ class Carrito
         }
     }
 
-    public static function updateCarrito($pdo, $carrito)
-    {
-        try {
-            // Query para modificar 
-            $query = "UPDATE carrito SET";
-
-            // Si no nos meten nada para modificar devolvemos error
-            if (count($carrito) == 0)
-                return -1;
-
-            // Construir la parte SET de la consulta
-            $setClause = "";
-
-            if (isset($carrito['fecha'])) {
-                $setClause .= " fecha = :fecha";
-            }
-
-            if (isset($carrito['cantidad'])) {
-                if (!empty($setClause)) {
-                    $setClause .= ",";
-                }
-                $setClause .= " cantidad = :cantidad";
-            }
-
-            // Agregar la parte SET a la consulta
-            $query .= $setClause;
-
-            // Añadir la condición WHERE
-            $query .= " WHERE GUID = :GUID";
-
-            // Depuración cutre mostramos la query
-            echo $query . "<br/>";
-
-            // Preparamos la consulta
-            $stmt = $pdo->prepare($query);
-
-            // Asociamos a los campos de la query los valores
-            if (isset($carrito['fecha'])) {
-                $stmt->bindValue(':fecha', $carrito['fecha']);
-            }
-
-            if (isset($carrito['cantidad'])) {
-                $stmt->bindValue(':cantidad', $carrito['cantidad']);
-            }
-
-            // Agregamos la vinculación para el GUID
-            $stmt->bindValue(':GUID', $carrito['GUID']);
-
-            // Ejecutamos la query
-            $stmt->execute();
-
-            // Sacamos la cantidad de filas afectadas
-            $filas_afectadas = $stmt->rowCount();
-
-            return $filas_afectadas;
-        } catch (PDOException $e) {
-            print "¡Error!: " . $e->getMessage() . "<br/>";
-            return -1;
-        } finally {
-            $pdo = null;
-        }
-    }
 
     public static function insertCarrito($pdo, $carrito)
     {
@@ -173,7 +111,6 @@ class Carrito
                 $stmt->bindValue(':cantidad', $carrito['cantidad']);
                 $stmt->bindValue(':GUID', $carrito['GUID']);
                 $stmt->bindValue(':precio', $carrito['precio']);
-                $stmt->bindValue(':cantidad', $carrito['precio']);
 
             } else {
                 // Asignamos los valores

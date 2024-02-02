@@ -132,12 +132,12 @@ nav a:hover {
   max-width: 100%;
 }
 
+
 .productos {
-  flex-basis: calc(33% - 20px);
+  width: 20rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  flex-basis: 30%;
   margin-bottom: 20px;
   padding: 20px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);

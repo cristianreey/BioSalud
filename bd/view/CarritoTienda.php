@@ -1,3 +1,15 @@
+<?php
+// Comprobar si la sesión está activa
+if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > 300)) {
+    session_unset();
+    session_destroy();
+    header("Location: login.php");
+    exit();
+}
+
+// Actualizar el tiempo de actividad de la sesión
+$_SESSION['last_activity'] = time();
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -33,8 +45,19 @@
                 <input type="text" placeholder="Buscar productos..." />
             </div>
             <div class="usuario">
-                <a href="login.html"><span class="material-icons">account_circle</span></a>
-                <a href="carrito.php"><span class="material-icons">shopping_bag</span></a>
+                <?php
+                if (!isset($_SESSION['usuario'])) {
+                    // Código para mostrar el icono de inicio de sesión
+                    echo "<a href='login.php'><span class='material-icons'>account_circle</span></a>";
+                } else {
+                    // Código para mostrar la primera letra del nombre del usuario y el enlace de cierre de sesión
+                    $nombreUsuario = $_SESSION['usuario'];
+                    $primeraLetra = strtoupper(substr($nombreUsuario, 0, 1));
+                    echo "<a class='material-icons perfil' href='perfil.php'>$primeraLetra</a>";
+                    echo "<a href='../controller/logoutController.php'><span class='material-icons'>exit_to_app</span></a>";
+                }
+                ?>
+                <a href="CarritoTienda.php"><span class="material-icons">shopping_bag</span></a>
             </div>
         </section>
         <section class="section2">
@@ -51,7 +74,7 @@
             $idCategoriaSeleccionada = isset($_GET['categoria']) ? $_GET['categoria'] : 0;
 
             foreach ($categorias as $id => $nombreCategoria) {
-                $enlace = "Tienda.php?categoria=$id";
+                $enlace = "../view/Tienda.php?categoria=$id";
                 $clase = ($id == $idCategoriaSeleccionada) ? 'categoria-actual' : '';
                 echo "<a href=\"$enlace\" class=\"$clase\"><span>$nombreCategoria</span></a>";
             }
@@ -84,10 +107,12 @@
             echo "</form>";
             echo '</div>';
         }
+        echo '</div>';
 
+        echo '<div class="contenedor-botones">';
         // Formulario para actualizar el carrito completo
-        echo "<form action='../controller/ActualizarCarritoController.php' method='POST' class='formulario'>\n";
-        echo "<button type='submit'>Actualizar Carrito</button>";
+        echo "<form action='../controller/EliminarCarritoController.php' method='POST' class='formulario'>\n";
+        echo "<div class='botones-carrito'><button type='submit'>Vaciar Carrito</button><div>";
         echo "</form>";
         echo '</div>';
         echo '</div>';

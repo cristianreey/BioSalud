@@ -61,7 +61,7 @@ $_SESSION['last_activity'] = time();
                 echo "<a href='../controller/logoutController.php'><span class='material-icons'>exit_to_app</span></a>";
             }
             ?>
-            <a href="carrito.php"><span class="material-icons">shopping_bag</span></a>
+            <a href="CarritoTienda.php"><span class="material-icons">shopping_bag</span></a>
         </div>
     </section>
     <section class="section2">
