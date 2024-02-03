@@ -92,8 +92,15 @@ $_SESSION['last_activity'] = time();
         echo '<h2>CARRITO</h2>';
         echo '<div class="contenedorProductos">';
 
-        // Iterar sobre los resultados obtenidos
+        // Inicializar el total del carrito
+        $totalCarrito = 0;
+
+        // Iterar sobre los productos en el carrito y sumar los precios
         foreach ($datosProductoId as $producto) {
+            // Sumar el precio del producto actual al total del carrito
+            $totalCarrito += $producto['precio'];
+
+            // Tu código para mostrar los detalles del producto continua aquí
             echo '<div class="productos">';
             echo '<img class="w-50" src="' . $producto['url'] . '">';
             echo '<h3>' . $producto['nombre'] . '</h3>';
@@ -109,12 +116,15 @@ $_SESSION['last_activity'] = time();
         }
         echo '</div>';
 
+        echo '<hr>';
+
         echo '<div class="contenedor-botones">';
+        // Imprimir el total del carrito
+        echo "<p><b>Total del Carrito:</b> $totalCarrito €</p>";
         // Formulario para actualizar el carrito completo
         echo "<form action='../controller/EliminarCarritoController.php' method='POST' class='formulario'>\n";
         echo "<div class='botones-carrito'><button type='submit'>Vaciar Carrito</button><div>";
         echo "</form>";
-        echo '</div>';
         echo '</div>';
         ?>
 
