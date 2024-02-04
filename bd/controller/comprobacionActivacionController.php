@@ -22,12 +22,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header("Location: ../view/Tienda.php");
             exit;
         } else {
-            // El código de activación no es válido, redirigir a una página de error o mostrar un mensaje
             header("Location: ../view/PaginaErrorActivacion.php");
             exit;
         }
     } else {
-        // Si no se recibió el código de activación, redirigir a una página de error o mostrar un mensaje
         header("Location: ../view/codigoActivacion.php");
         exit;
     }

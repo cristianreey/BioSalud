@@ -4,8 +4,8 @@ session_start();
 use bd\model\Cliente;
 use bd\model\Farmacia;
 
-require_once("../model/conexion.php"); // Suponiendo que tienes un archivo de conexión a la base de datos
-require_once("../model/cliente.php"); // Suponiendo que tienes un archivo que contiene la definición de la clase Cliente y la función updateCliente
+require_once("../model/conexion.php");
+require_once("../model/cliente.php");
 
 // Verificar si se ha enviado el formulario
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -32,11 +32,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $actualizado = Cliente::updateCliente($pdo, $cliente);
 
     if ($actualizado) {
-        // Si la actualización fue exitosa, redirigir al usuario a alguna página de confirmación o a la página de perfil actualizada
+
         header("Location: ../view/perfil_actualizado.php");
         exit();
     } else {
-        // Si hubo un error en la actualización, mostrar un mensaje de error o redirigir a una página de error
         header("Location: ../view/error.php");
         exit();
     }

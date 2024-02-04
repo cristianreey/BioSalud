@@ -13,7 +13,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
     $password = $_POST['contrasena'];
 
-    // Aquí deberías validar y autenticar el inicio de sesión
     // Si el inicio de sesión es exitoso, configura la sesión y redirige al usuario
     if (Cliente::iniciarSesion($email, $password)) {
         // Inicia sesión y redirige al usuario a la página principal
