@@ -25,6 +25,3 @@ if (isset($_SESSION['user'])) {
     // Cargamos los datos de los productos
     $datosProductoCategoria = Producto::obtenerProductosPorCategoria($pdo, $idCategoria);
 }
-
-
-

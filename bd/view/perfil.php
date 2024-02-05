@@ -17,7 +17,7 @@
         </a>
         <form action="../controller/EditarClienteController.php" method="POST" class="form">
             <?php
-            session_start(); // Inicia la sesión si no está iniciada
+            session_start();
             require_once("../controller/verDatosClienteController.php");
 
             if (isset($_SESSION['usuario'])) {

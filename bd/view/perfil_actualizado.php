@@ -17,7 +17,7 @@
         <form class="form">
             <div>
                 <?php
-                // Iniciar sesión PHP
+                // Iniciar sesión
                 session_start();
                 // Requerir el controlador para ver los datos del cliente
                 require_once("../controller/verDatosClienteController.php");
@@ -53,7 +53,7 @@
                         echo "No se encontraron datos del usuario.";
                     }
                 } else {
-                    // Si no hay sesión activa, detener el script PHP
+                    // Si no hay sesión activa, detener el script 
                     exit();
                 }
                 ?>

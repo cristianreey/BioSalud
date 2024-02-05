@@ -25,8 +25,7 @@ $_SESSION['last_activity'] = time();
 
     <link rel="stylesheet" href="../vendor/bootstrap/css/bootstrap.css" />
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
 
 
@@ -70,7 +69,6 @@ $_SESSION['last_activity'] = time();
                 4 => "DERMOCOSMÉTICA"
             );
 
-            // Asegurar que $idCategoriaSeleccionada esté definida antes de usarla
             $idCategoriaSeleccionada = isset($_GET['categoria']) ? $_GET['categoria'] : 0;
 
             foreach ($categorias as $id => $nombreCategoria) {
@@ -95,12 +93,10 @@ $_SESSION['last_activity'] = time();
         // Inicializar el total del carrito
         $totalCarrito = 0;
 
-        // Iterar sobre los productos en el carrito y sumar los precios
         foreach ($datosProductoId as $producto) {
             // Sumar el precio del producto actual al total del carrito
             $totalCarrito += $producto['precio'];
 
-            // Tu código para mostrar los detalles del producto continua aquí
             echo '<div class="productos">';
             echo '<img class="w-50" src="' . $producto['url'] . '">';
             echo '<h3>' . $producto['nombre'] . '</h3>';
@@ -121,7 +117,7 @@ $_SESSION['last_activity'] = time();
         echo '<div class="contenedor-botones">';
         // Imprimir el total del carrito
         echo "<p><b>Total del Carrito:</b> $totalCarrito €</p>";
-        // Formulario para actualizar el carrito completo
+        // Formulario para eliminar el carrito completo
         echo "<form action='../controller/EliminarCarritoController.php' method='POST' class='formulario'>\n";
         echo "<div class='botones-carrito'><button type='submit'>Vaciar Carrito</button><div>";
         echo "</form>";

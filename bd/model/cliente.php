@@ -6,13 +6,11 @@ header('Content-Type: text/html; charset=UTF-8');
 
 use bd\model\Farmacia;
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 require_once 'conexion.php';
 require '..\PHPMailer-master\PHPMailer-master\src\PHPMailer.php';
 require '..\PHPMailer-master\PHPMailer-master\src\Exception.php';
-require '..\PHPMailer-master\PHPMailer-master\src\SMTP.php';
 
 use PDOException;
 use PDO;
@@ -23,17 +21,17 @@ class Cliente
     {
         $pdo = Farmacia::conectar();
 
-        // Validar los datos (realiza validaciones más robustas según tus necesidades)
+        // Validar los datos
         if (empty($nombre) || empty($email) || empty($password) || empty($fechaNacimiento) || empty($dni) || empty($telefono)) {
             return "Por favor, complete todos los campos.";
         } else {
             try {
                 // Generar código de activación
-                $codigoActivacion = bin2hex(random_bytes(16)); // 16 bytes para obtener una cadena de 32 caracteres hexadecimal
+                $codigoActivacion = bin2hex(random_bytes(16)); 
 
                 $salt = bin2hex(random_bytes(16));
 
-                // Hash de la contraseña (mejora la seguridad almacenando contraseñas de manera segura)
+                // Hash de la contraseña
                 $hashedPassword = hash('sha256', $password . $salt);
 
                 // Definir el valor predeterminado para el campo activo como false
@@ -98,8 +96,6 @@ class Cliente
 
             $resultado = $pdo->query($query);
 
-            //FetchAll nos saca todos los registros de la query
-            //El fetchall no se puede utilizar mas de una vez
             $resulSet = $resultado->fetchAll();
         } catch (PDOException $e) {
             print "¡Error!: " . $e->getMessage() . "<br/>";
@@ -222,15 +218,4 @@ class Cliente
             return false;
         }
     }
-
-
-
-
-
-
-
 }
-
-
-
-

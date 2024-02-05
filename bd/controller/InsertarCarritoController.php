@@ -14,10 +14,9 @@ session_start();
 if (isset($_SESSION['user'])) {
     //Si el usuario esta logado insertamos el producto
     //Si no hay conexion activa nos conectamos
-    if (!isset($pdo))
+    if (!isset($pdo)) {
         $pdo = ModelUtils::conectar();
-
-    //Cargamos el id del producto a insertar
+    }
 
     $fecha = ModelUtils::validarDatos($_POST['fecha']);
     $cantidad = ModelUtils::validarDatos($_POST['cantidad']);
@@ -36,10 +35,8 @@ if (isset($_SESSION['user'])) {
     ];
 
     //Insertamos el producto
-    //Habria que comprobar que se ha insertado bien
     ModelCarrito::insertCarrito($pdo, $carrito_nuevo);
 
-    //Cargamos la vista principal
     //Cargamos los datos de los productos
     $datosProducto = ModelCarrito::getCarrito($pdo);
 

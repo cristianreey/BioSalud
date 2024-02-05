@@ -18,7 +18,6 @@
                 <input type="text" name="codigoActivacion" class="input" placeholder="a">
                 <label for="" class="label">Inserte el código</label>
             </div>
-
             <input type="submit" class="submitBtn" value="Entrar">
         </form>
     </div>

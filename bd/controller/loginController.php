@@ -1,7 +1,6 @@
 <?php
 namespace controller;
 
-use bd\model\Farmacia;
 use bd\model\Cliente;
 
 require_once("../model/cliente.php");
@@ -20,12 +19,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: ../view/Tienda.php");
         exit();
     } else {
-        // Si el inicio de sesión falla, puedes mostrar un mensaje de error
+        // Si el inicio de sesión falla mostramos un mensaje de error
         echo "Credenciales incorrectas. Por favor, inténtelo de nuevo.";
     }
 } else {
     exit();
 }
-
-
-

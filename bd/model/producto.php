@@ -48,13 +48,14 @@ class Producto
             //filas afectadas devueltas
             return $filas_afectadas;
         } catch (PDOException $e) {
-                        //en caso de error mostramos el mensaje
+            //en caso de error mostramos el mensaje
             print "¡Error!: " . $e->getMessage() . "<br/>";
             die();
         } finally {
             $pdo = null;
         }
     }
+
     //método para insertar los productos
     public static function insertProducto($pdo, $producto)
     {
@@ -108,7 +109,7 @@ class Producto
                 $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 return $productos;
             } else {
-                return array();  // Devolver un array vacío si no hay productos
+                return array(); 
             }
         } catch (PDOException $e) {
             //en caso de error mostramos el mensaje
@@ -120,12 +121,12 @@ class Producto
     public static function obtenerProductoCarrito($pdo)
     {
         try {
-            // Realizamos una query sin un GUID específico, para obtener todos los productos en la tabla carrito
+            // Realizamos una query sin un GUID específico, para obtener todos los productos en la tabla carrito junto con la cantidad y el precio
             $query = "SELECT productos.*, carrito.cantidad, carrito.precio
                       FROM productos
                       INNER JOIN carrito ON productos.GUID = carrito.GUID";
 
-            // Preparamos la ejecución de la sentencia (statement stmt)
+            // Preparamos la ejecución de la sentencia
             $stmt = $pdo->prepare($query);
 
             // Ejecutamos la consulta

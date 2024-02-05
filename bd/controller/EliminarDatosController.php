@@ -12,18 +12,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['producto_id'])) {
 
   // Obtener el ID del producto a eliminar
   $productoId = $_POST['producto_id'];
-  var_dump($productoId);
 
-  // Lógica para eliminar el producto del carrito
   $pdo = Farmacia::conectar();
 
   $filas_afectadas = Carrito::delCarrito($pdo, $productoId);
-  var_dump($filas_afectadas);
+
   if ($filas_afectadas > 0) {
-    // Éxito: redirigir a la página del carrito
+    // Éxito
     header('Location: ../view/CarritoTienda.php');
   } else {
-    // Error: manejar de acuerdo a tus necesidades
+    // Error
     echo "Error al eliminar el producto del carrito.";
   }
 } else {

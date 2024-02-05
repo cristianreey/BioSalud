@@ -1,15 +1,8 @@
 <?php
 namespace controller;
 
-use bd\model\Carrito;
-use bd\model\Producto;
-use bd\model\Farmacia;
 use bd\model\Cliente;
 
-
-require_once("../model/conexion.php");
-require_once("../model/producto.php");
-require_once("../model/carrito.php");
 require_once("../model/cliente.php");
 
 
@@ -32,10 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Utilizar la clase Cliente para registrar al cliente
     $mensaje = Cliente::registrarCliente($nombre, $email, $password, $fechaNacimiento, $dni, $telefono);
 
-    // Mostrar el mensaje
     echo $mensaje;
-
-
 }
 
 ?>

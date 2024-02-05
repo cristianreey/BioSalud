@@ -194,9 +194,6 @@ $_SESSION['last_activity'] = time();
         echo '</div>';
 
     }
-
-
-
     ?>
 
 </main>

@@ -27,5 +27,5 @@ if (isset($_SESSION['user'])) {
 } else {
     // Si no hay usuario, redireccionamos al login
     header("Location: ../view/login.php");
-    exit(); // Importante para detener la ejecución del script después de redirigir
+    exit();
 }

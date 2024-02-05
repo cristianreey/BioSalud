@@ -18,7 +18,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $pdo = Farmacia::conectar();
 
-
     // Crear un objeto Cliente con los datos recibidos
     $cliente = array(
         'nombre' => $nombre,

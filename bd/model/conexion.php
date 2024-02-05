@@ -12,7 +12,6 @@ class Farmacia
      */
     public static function conectar()
     {
-        //Cargamos las variables de conexion
         include('C:\xampp\htdocs\DES\BioSalud\bd\settings.inc');
 
         try {

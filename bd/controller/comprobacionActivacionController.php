@@ -16,12 +16,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Verificar el código de activación
         $resultado = Cliente::compararCodigoVerificacion($codigoActivacion);
 
-        // Manejar el resultado según corresponda
         if ($resultado === true) {
             // Redirigir al usuario a la página de inicio
             header("Location: ../view/Tienda.php");
             exit;
         } else {
+            // Redirigir al usuario a la página de error
             header("Location: ../view/PaginaErrorActivacion.php");
             exit;
         }
